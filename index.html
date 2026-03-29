@@ -253,9 +253,13 @@ function reset(){results={};loadingSet=new Set();currentIdea='';document.getElem
 function doInit(){showScreen(getKey()?'inputScreen':'setupScreen');updateKeyStatus();}
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',doInit);}else{doInit();}
 let dp=null;
+// Init — run immediately
+(function(){showScreen(getKey()?'inputScreen':'setupScreen');updateKeyStatus();})();
+
+// PWA
+let dp=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;setTimeout(()=>{document.getElementById('installBanner').style.display='flex';},3000);});
 document.getElementById('installBtn').addEventListener('click',async()=>{if(!dp)return;dp.prompt();await dp.userChoice;dp=null;document.getElementById('installBanner').style.display='none';});
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
