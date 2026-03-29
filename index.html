@@ -33,7 +33,6 @@
       overflow-x: hidden;
     }
 
-    /* ── HEADER ── */
     .header {
       position: sticky;
       top: 0;
@@ -67,17 +66,15 @@
       border-radius: 20px;
     }
 
-    /* ── SCREENS ── */
     .screen { display: none; padding: 24px 20px; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0)); }
     .screen.active { display: block; }
 
-    /* ── INPUT SCREEN ── */
     .intro {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 32px;
+      font-size: 34px;
       font-weight: 300;
       line-height: 1.2;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     .intro em { color: var(--gold); font-style: normal; }
     .sub {
@@ -99,25 +96,23 @@
       color: var(--white);
       resize: none;
       outline: none;
-      border-radius: 0;
       line-height: 1.6;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, background 0.2s;
     }
-    textarea::placeholder { color: #555; }
-    textarea:focus { border-color: var(--gold); background: #131313; }
+    textarea::placeholder { color: #444; }
+    textarea:focus { border-color: var(--gold-light); background: #131313; }
 
     .context-bar {
       margin-top: 10px;
       padding: 10px 14px;
-      background: rgba(45, 106, 79, 0.1);
+      background: rgba(45,106,79,0.08);
       border-left: 3px solid #2D6A4F;
       font-size: 11px;
-      color: #666;
-      line-height: 1.6;
+      color: #555;
+      line-height: 1.7;
     }
     .context-bar strong { color: #2D6A4F; }
 
-    /* ── AGENT GRID ── */
     .agent-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -128,18 +123,15 @@
       background: var(--black2);
       border: 1px solid #1e1e1e;
       border-left: 3px solid var(--agent-color, var(--gold));
-      padding: 12px 14px;
+      padding: 11px 13px;
       display: flex;
       align-items: center;
       gap: 10px;
-      transition: background 0.2s;
     }
-    .agent-card:active { background: #1e1e1e; }
-    .agent-emoji { font-size: 20px; }
-    .agent-name { font-size: 12px; font-weight: 500; color: var(--agent-color, var(--white)); }
+    .agent-emoji { font-size: 18px; }
+    .agent-name { font-size: 11px; font-weight: 500; }
     .agent-role { font-size: 10px; color: var(--grey2); margin-top: 2px; }
 
-    /* ── CTA BUTTON ── */
     .cta {
       width: 100%;
       margin-top: 28px;
@@ -147,23 +139,26 @@
       color: var(--black);
       border: none;
       padding: 18px;
-      font-size: 12px;
+      font-size: 11px;
       font-family: 'DM Sans', sans-serif;
-      font-weight: 500;
+      font-weight: 600;
       letter-spacing: 3px;
       text-transform: uppercase;
       cursor: pointer;
       transition: background 0.2s, transform 0.1s;
     }
     .cta:active { transform: scale(0.98); background: var(--gold-light); }
-    .cta:disabled { background: #333; color: #666; cursor: not-allowed; }
 
-    /* ── RESULTS SCREEN ── */
     .result-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
+    }
+    .result-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
     }
     .reset-btn {
       font-size: 11px;
@@ -171,8 +166,8 @@
       text-transform: uppercase;
       color: var(--gold);
       background: transparent;
-      border: 1px solid rgba(201,169,110,0.4);
-      padding: 8px 16px;
+      border: 1px solid rgba(201,169,110,0.3);
+      padding: 8px 14px;
       cursor: pointer;
       font-family: 'DM Sans', sans-serif;
     }
@@ -181,36 +176,25 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
-    .progress-bar {
-      flex: 1;
-      height: 2px;
-      background: #1e1e1e;
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--gold);
-      transition: width 0.5s ease;
-      border-radius: 2px;
-    }
+    .progress-bar { flex: 1; height: 1px; background: #222; }
+    .progress-fill { height: 100%; background: var(--gold); transition: width 0.5s ease; }
     .progress-label { font-size: 11px; color: var(--grey); white-space: nowrap; }
 
-    /* ── AGENT TABS ── */
     .agent-tabs {
       display: flex;
       gap: 6px;
       overflow-x: auto;
-      padding-bottom: 4px;
-      margin-bottom: 20px;
+      padding-bottom: 16px;
+      margin-bottom: 16px;
       scrollbar-width: none;
     }
     .agent-tabs::-webkit-scrollbar { display: none; }
+
     .agent-tab {
       flex-shrink: 0;
-      padding: 8px 14px;
+      padding: 8px 13px;
       background: var(--black2);
       border: 1px solid #222;
       font-size: 12px;
@@ -220,28 +204,20 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s;
       white-space: nowrap;
+      transition: all 0.15s;
     }
     .agent-tab.active {
-      background: var(--agent-color, var(--gold));
-      border-color: var(--agent-color, var(--gold));
-      color: var(--white);
+      background: var(--tab-color, var(--gold));
+      border-color: var(--tab-color, var(--gold));
+      color: #fff;
       font-weight: 500;
     }
-    .agent-tab .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: currentColor;
-      opacity: 0.5;
-    }
+    .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.4; }
     .agent-tab.done .dot { opacity: 1; background: #4ade80; }
-    .agent-tab.loading .dot {
-      animation: pulse 1s ease-in-out infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+    .agent-tab.loading .dot { animation: blink 1s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:0.2} 50%{opacity:1} }
 
-    /* ── RESULT CARD ── */
     .idea-recap {
       padding: 12px 16px;
       background: var(--black2);
@@ -257,17 +233,17 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding-bottom: 16px;
-      margin-bottom: 20px;
-      border-bottom: 1px solid #222;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #1e1e1e;
     }
-    .result-emoji { font-size: 28px; }
+    .result-emoji { font-size: 26px; }
     .result-agent-name {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 600;
     }
-    .result-agent-role { font-size: 11px; color: var(--grey); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+    .result-agent-role { font-size: 10px; color: var(--grey); letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; }
 
     .result-body {
       background: var(--black2);
@@ -275,7 +251,7 @@
       padding: 20px;
       font-size: 14px;
       line-height: 1.85;
-      color: #ddd;
+      color: #ccc;
       white-space: pre-wrap;
       min-height: 200px;
     }
@@ -286,12 +262,12 @@
       align-items: center;
       justify-content: center;
       padding: 60px 20px;
-      gap: 16px;
+      gap: 14px;
       color: var(--grey);
       font-size: 13px;
     }
     .spinner {
-      width: 32px; height: 32px;
+      width: 28px; height: 28px;
       border: 2px solid #222;
       border-top-color: var(--gold);
       border-radius: 50%;
@@ -304,11 +280,10 @@
       align-items: center;
       justify-content: center;
       padding: 60px 20px;
-      color: #333;
+      color: #2a2a2a;
       font-size: 13px;
     }
 
-    /* ── INSTALL BANNER ── */
     .install-banner {
       position: fixed;
       bottom: calc(16px + env(safe-area-inset-bottom, 0));
@@ -321,65 +296,54 @@
       justify-content: space-between;
       gap: 12px;
       z-index: 200;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.8);
     }
-    .install-text { font-size: 13px; color: var(--white); line-height: 1.4; }
+    .install-text { font-size: 13px; line-height: 1.4; }
     .install-text span { display: block; font-size: 11px; color: var(--grey); margin-top: 2px; }
     .install-btn {
       background: var(--gold);
       color: var(--black);
       border: none;
-      padding: 10px 18px;
-      font-size: 12px;
-      font-weight: 500;
+      padding: 10px 16px;
+      font-size: 11px;
+      font-weight: 600;
       font-family: 'DM Sans', sans-serif;
       cursor: pointer;
       white-space: nowrap;
       letter-spacing: 1px;
     }
-    .install-close {
-      background: transparent;
-      border: none;
-      color: var(--grey);
-      font-size: 18px;
-      cursor: pointer;
-      padding: 4px;
-      line-height: 1;
-    }
+    .install-close { background: transparent; border: none; color: var(--grey); font-size: 20px; cursor: pointer; }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div class="header-inner">
     <div class="logo">Charly's <span>Agents</span></div>
-    <div class="badge" id="headerBadge">7 specialisten</div>
+    <div class="badge" id="headerBadge">8 specialisten</div>
   </div>
 </div>
 
-<!-- INPUT SCREEN -->
+<!-- INPUT -->
 <div class="screen active" id="inputScreen">
   <div class="intro">Jouw idee.<br><em>Hun expertise.</em></div>
-  <div class="sub">Het projectkader is ingeladen. Voeg toe wat je wilt — of druk direct op start.</div>
+  <div class="sub">Projectkader is ingeladen. Voeg toe wat je wilt — of druk direct op start.</div>
 
-  <textarea id="ideaInput" placeholder="Bijv. 'Focus op de juridische structuur en financiering' — of laat leeg voor een volledige analyse."></textarea>
+  <textarea id="ideaInput" placeholder="Bijv. 'Wat is de beste juridische structuur?' — of laat leeg voor volledige analyse."></textarea>
 
   <div class="context-bar">
-    <strong>Ingeladen:</strong> 10 off-grid woonarken · Apeldoorns Kanaal · Waterschap positief · Vergunning mei 2026 · Molly VR · €400k verkoopprijs
+    <strong>Ingeladen:</strong> 10 off-grid woonarken (15×5m) · Apeldoorns Kanaal · Verhuur én verkoop · Waterschap positief · Vergunning mei 2026 · Molly VR · €400k · Ruim budget
   </div>
 
   <div class="agent-grid" id="agentGrid"></div>
 
-  <button class="cta" id="startBtn" onclick="handleSubmit()">
-    Zet mijn team aan het werk →
-  </button>
+  <button class="cta" onclick="handleSubmit()">Zet mijn team aan het werk →</button>
 </div>
 
-<!-- RESULTS SCREEN -->
+<!-- RESULTS -->
 <div class="screen" id="resultsScreen">
   <div class="result-header">
-    <div style="font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600;">Analyse</div>
+    <div class="result-title">Analyse</div>
     <button class="reset-btn" onclick="reset()">Nieuw idee</button>
   </div>
 
@@ -387,15 +351,14 @@
 
   <div class="progress-row">
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-    <div class="progress-label" id="progressLabel">0 / 7</div>
+    <div class="progress-label" id="progressLabel">0 / 8</div>
   </div>
 
   <div class="agent-tabs" id="agentTabs"></div>
-
   <div id="activeResult"></div>
 </div>
 
-<!-- INSTALL BANNER -->
+<!-- INSTALL -->
 <div class="install-banner" id="installBanner" style="display:none;">
   <div class="install-text">
     Installeer als app
@@ -408,38 +371,43 @@
 <script>
 const PROJECT_CONTEXT = `
 PROJECTCONTEXT:
-- Initiatiefnemer: Chiel van Tongeren, Apeldoorn
+- Initiatiefnemer: Chiel van Tongeren (Charly), Apeldoorn
 - Project: 10 off-grid woonboten/woonarken op het Apeldoorns Kanaal
+- Afmetingen per ark: 15 x 5 meter
+- Exploitatiemodel: zowel verhuur als verkoop
 - Kanaal eigenaar: Waterschap Vallei Veluwe — staat positief tegenover het project
 - Regelgeving: gemeente Apeldoorn — ligplaatsvergunningen verwacht eind mei 2026
 - Visualisatie: Molly VR (Bratislava) — 3D renders, verkoop via link (verkoop op tekening)
 - Verkoopprijs indicatie: €400.000 per woonark
 - Off-grid: zonnepanelen, waterrecycling, energieopslag — kosten verwerkt in verkoopprijs
+- Budget: ruim budget beschikbaar voor de eerste fase
 - Chiel is initiatiefnemer, geen ontwikkelaar — zoekt nog bouwkundige en juridische partners
 `;
 
 const agents = [
   { id:"strateeg", name:"De Strateeg", emoji:"🧠", color:"#2D6A4F", role:"Roadmap & fasering",
-    prompt:`Je bent De Strateeg — scherp, direct en strategisch. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nMaak een concrete roadmap met duidelijke fases van nu tot eerste verkoop en oplevering. Benoem kritische beslismomenten en prioriteiten. Gebruik een heldere fasering.` },
+    prompt:`Je bent De Strateeg — scherp, direct en strategisch. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nMaak een concrete roadmap met fases van nu tot eerste verhuur/verkoop en oplevering. Benoem kritische beslismomenten en de afhankelijkheid van de vergunning eind mei 2026.` },
   { id:"projectmanager", name:"De Projectmanager", emoji:"📋", color:"#1B4965", role:"Planning & bewaking",
-    prompt:`Je bent De Projectmanager — georganiseerd en resultaatgericht. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nMaak een projectstructuur met taken, verantwoordelijkheden, mijlpalen en risico's. Signaleer de grootste projectrisico's.` },
+    prompt:`Je bent De Projectmanager — georganiseerd en resultaatgericht. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nMaak een projectstructuur met taken, verantwoordelijkheden, mijlpalen en risico's. Houd rekening met zowel verhuur als verkoop als exploitatiemodel.` },
   { id:"communicator", name:"De Communicator", emoji:"✍️", color:"#7B5E3A", role:"Verhaal & marketing",
-    prompt:`Je bent De Communicator — creatief en overtuigend. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nSchrijf een krachtige projectpitch (max 1 A4) en een marketingaanpak met doelgroep, kanalen en boodschap.` },
+    prompt:`Je bent De Communicator — creatief en overtuigend. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nSchrijf een krachtige projectpitch (max 1 A4) en een marketingaanpak voor zowel kopers als huurders. Benoem kanalen en boodschap per doelgroep.` },
+  { id:"marktanalist", name:"De Marktanalist", emoji:"🎯", color:"#8B2252", role:"Doelgroep & positionering",
+    prompt:`Je bent De Marktanalist — scherp in doelgroepen en marktpositionering. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nAnalyseer de markt grondig:\n1. Wie zijn de ideale kopers voor een off-grid woonark van €400k aan het Apeldoorns Kanaal?\n2. Wie zijn de ideale huurders?\n3. Wat zijn hun motivaties, leefstijl en inkomensniveau?\n4. Hoe positioneer je dit project optimaal in de markt?\n5. Wat zijn de sterkste verkoopargumenten per doelgroep?\nWees specifiek en concreet — geen vage doelgroepomschrijvingen.` },
   { id:"researcher", name:"De Researcher", emoji:"🔍", color:"#4A3F6B", role:"Regelgeving & vergunningen",
-    prompt:`Je bent De Researcher — grondig en nauwkeurig. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nGeef een volledig overzicht van relevante wet- en regelgeving, vergunningen, subsidies en aandachtspunten voor het Apeldoorns Kanaal.` },
+    prompt:`Je bent De Researcher — grondig en nauwkeurig. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nGeef een volledig overzicht van relevante wet- en regelgeving, vergunningen (gemeente, waterschap, provincie), subsidies voor off-grid/duurzaam wonen en aandachtspunten voor het Apeldoorns Kanaal. Benoem ook wat er specifiek geregeld moet worden voor verhuur én verkoop.` },
   { id:"analist", name:"De Analist", emoji:"🔢", color:"#5C4033", role:"Financiën & haalbaarheid",
-    prompt:`Je bent De Analist — cijfermatig en scherp. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nMaak een financiële haalbaarheidsanalyse: kostprijs per ark, totale investering, opbrengst bij €400k, marge, risico's en financieringsopties.` },
+    prompt:`Je bent De Analist — cijfermatig en scherp. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nMaak een financiële haalbaarheidsanalyse voor zowel het verhuur- als verkoopscenario:\n1. Indicatieve kostprijs per woonark (15x5m, off-grid)\n2. Totale investering voor 10 arken\n3. Verkoopscenario: opbrengst bij €400k, marge\n4. Verhuurscenario: verwachte huurprijs, bezettingsgraad, ROI\n5. Gecombineerd scenario (deel verkoop, deel verhuur)\n6. Financieringsopties. Gebruik realistische Nederlandse marktprijzen.` },
   { id:"ontwikkelaar", name:"De Ontwikkelaar", emoji:"🏗️", color:"#3D5A47", role:"Bouw & techniek",
-    prompt:`Je bent De Ontwikkelaar — bouwkundig specialist. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nGeef bouwkundig advies: afmetingen, off-grid systemen, geschikte scheepswerven in Nederland, bouwfasering en technische aandachtspunten voor het Apeldoorns Kanaal.` },
+    prompt:`Je bent De Ontwikkelaar — bouwkundig specialist in drijvende woningen. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nGeef bouwkundig advies voor een woonark van 15x5 meter:\n1. Technische specs en indeling (woonoppervlak, dek, etc.)\n2. Off-grid systemen: solar, water, warmte, afvalverwerking — realistisch voor deze maat\n3. Welke scheepswerven/bouwers in Nederland bouwen woonarken van dit formaat?\n4. Bouwfasering voor 10 arken — doorlooptijd en fasering\n5. Technische aandachtspunten Apeldoorns Kanaal (diepgang, breedte, etc.)` },
   { id:"jurist", name:"De Jurist", emoji:"⚖️", color:"#1C3A5E", role:"Juridisch & contracten",
-    prompt:`Je bent De Jurist — scherp juridisch denker. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nGeef juridisch advies: rechtsvorm, waterrecht met Vallei Veluwe, juridisch veilige verkoop op tekening, risico's voor Chiel, benodigde contracten.` },
+    prompt:`Je bent De Jurist — scherp juridisch denker. Schrijf altijd in het Nederlands.\n${PROJECT_CONTEXT}\nGeef juridisch advies:\n1. Welke rechtsvorm past bij dit project (verhuur én verkoop)?\n2. Wat regelen met Waterschap Vallei Veluwe (ligplaatsrechten, erfpacht)?\n3. Hoe structureer je verhuur en verkoop op tekening juridisch veilig?\n4. Welke risico's en aansprakelijkheden heeft Chiel als initiatiefnemer?\n5. Welke contracten zijn minimaal nodig vóór start verhuur/verkoop?\nWees concreet en praktisch.` },
 ];
 
 let results = {};
 let loadingSet = new Set();
 let activeAgentId = agents[0].id;
 
-// Render agent grid on input screen
+// Build agent grid
 const grid = document.getElementById('agentGrid');
 agents.forEach(a => {
   const card = document.createElement('div');
@@ -457,7 +425,7 @@ async function callAgent(agent, idea) {
       model: "claude-sonnet-4-20250514",
       max_tokens: 1000,
       system: agent.prompt,
-      messages: [{ role: "user", content: `Aanvullende input van Chiel: ${idea}` }]
+      messages: [{ role: "user", content: `Aanvullende input van Chiel: ${idea || 'Geef een volledige analyse op basis van de projectcontext.'}` }]
     })
   });
   const data = await res.json();
@@ -470,19 +438,17 @@ async function handleSubmit() {
   loadingSet = new Set(agents.map(a => a.id));
   activeAgentId = agents[0].id;
 
-  // Switch screens
   document.getElementById('inputScreen').classList.remove('active');
   document.getElementById('resultsScreen').classList.add('active');
-  document.getElementById('ideaRecap').textContent = idea || 'Volledige projectanalyse op basis van ingeladen context';
-  document.getElementById('headerBadge').textContent = '0 / 7 klaar';
+  document.getElementById('ideaRecap').textContent = idea || 'Volledige projectanalyse — verhuur & verkoop · 10 woonarken 15×5m · Apeldoorns Kanaal';
+  document.getElementById('headerBadge').textContent = '0 / 8 klaar';
 
   renderTabs();
   renderActiveResult();
 
   for (const agent of agents) {
     try {
-      const result = await callAgent(agent, idea);
-      results[agent.id] = result;
+      results[agent.id] = await callAgent(agent, idea);
     } catch(e) {
       results[agent.id] = 'Er ging iets mis. Probeer opnieuw.';
     }
@@ -495,8 +461,7 @@ async function handleSubmit() {
 
 function updateProgress() {
   const done = Object.keys(results).length;
-  const pct = (done / agents.length) * 100;
-  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressFill').style.width = (done / agents.length * 100) + '%';
   document.getElementById('progressLabel').textContent = `${done} / ${agents.length}`;
   document.getElementById('headerBadge').textContent = `${done} / ${agents.length} klaar`;
 }
@@ -505,9 +470,12 @@ function renderTabs() {
   const container = document.getElementById('agentTabs');
   container.innerHTML = '';
   agents.forEach(a => {
+    const isActive = a.id === activeAgentId;
+    const isDone = !!results[a.id];
+    const isLoading = loadingSet.has(a.id);
     const tab = document.createElement('button');
-    tab.className = 'agent-tab' + (a.id === activeAgentId ? ' active' : '') + (results[a.id] ? ' done' : '') + (loadingSet.has(a.id) ? ' loading' : '');
-    if (a.id === activeAgentId) tab.style.setProperty('--agent-color', a.color);
+    tab.className = `agent-tab${isActive ? ' active' : ''}${isDone ? ' done' : ''}${isLoading ? ' loading' : ''}`;
+    if (isActive) tab.style.setProperty('--tab-color', a.color);
     tab.innerHTML = `<span class="dot"></span>${a.emoji} ${a.name}`;
     tab.onclick = () => { activeAgentId = a.id; renderTabs(); renderActiveResult(); };
     container.appendChild(tab);
@@ -517,12 +485,10 @@ function renderTabs() {
 function renderActiveResult() {
   const agent = agents.find(a => a.id === activeAgentId);
   const container = document.getElementById('activeResult');
-
-  let content = '';
   if (loadingSet.has(agent.id)) {
-    content = `<div class="loading-state"><div class="spinner" style="border-top-color:${agent.color}"></div><div>Aan het werk...</div></div>`;
+    container.innerHTML = `<div class="loading-state"><div class="spinner" style="border-top-color:${agent.color}"></div><div>Aan het werk...</div></div>`;
   } else if (results[agent.id]) {
-    content = `
+    container.innerHTML = `
       <div class="result-agent-header">
         <div class="result-emoji">${agent.emoji}</div>
         <div>
@@ -532,9 +498,8 @@ function renderActiveResult() {
       </div>
       <div class="result-body">${results[agent.id]}</div>`;
   } else {
-    content = `<div class="waiting-state">Wacht op andere agents...</div>`;
+    container.innerHTML = `<div class="waiting-state">Wacht op andere agents...</div>`;
   }
-  container.innerHTML = content;
 }
 
 function reset() {
@@ -543,31 +508,23 @@ function reset() {
   document.getElementById('ideaInput').value = '';
   document.getElementById('resultsScreen').classList.remove('active');
   document.getElementById('inputScreen').classList.add('active');
-  document.getElementById('headerBadge').textContent = '7 specialisten';
+  document.getElementById('headerBadge').textContent = '8 specialisten';
 }
 
-// ── PWA INSTALL ──
+// PWA install
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  setTimeout(() => {
-    document.getElementById('installBanner').style.display = 'flex';
-  }, 2000);
+  setTimeout(() => { document.getElementById('installBanner').style.display = 'flex'; }, 2000);
 });
-
 document.getElementById('installBtn').addEventListener('click', async () => {
   if (!deferredPrompt) return;
   deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
+  await deferredPrompt.userChoice;
   deferredPrompt = null;
   document.getElementById('installBanner').style.display = 'none';
 });
-
-window.addEventListener('appinstalled', () => {
-  document.getElementById('installBanner').style.display = 'none';
-});
 </script>
-
 </body>
 </html>
