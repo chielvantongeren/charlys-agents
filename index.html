@@ -93,6 +93,25 @@
 </head>
 <body>
 <div class="header"><div class="header-inner"><div class="logo">Charly's <span>Agents</span></div><div class="badge" id="headerBadge">8 Specialisten</div></div></div>
+<div class="screen" id="setupScreen">
+  <div class="input-wrap">
+    <div class="hero">
+      <div class="hero-label">Eenmalige instelling</div>
+      <h1>Jouw <em>API Key.</em></h1>
+      <p>Voer je Anthropic API key in. Deze wordt veilig opgeslagen op jouw apparaat en nooit gedeeld.</p>
+    </div>
+    <div class="input-box">
+      <input id="apiKeyInput" type="password" placeholder="sk-ant-..." style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px 18px;font-size:15px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;border-color:var(--border-gold)"/>
+    </div>
+    <div class="context-pill" style="margin-top:12px">
+      <div class="dot"></div>
+      <div>Haal je key op via <strong>console.anthropic.com</strong> onder API Keys. De key wordt alleen lokaal opgeslagen op jouw telefoon.</div>
+    </div>
+    <div class="cta-wrap" style="margin-top:24px">
+      <button class="cta" onclick="saveApiKey()">Opslaan & starten</button>
+    </div>
+  </div>
+</div>
 <div class="screen active" id="inputScreen"><div class="input-wrap">
   <div class="hero"><div class="hero-label">Jouw persoonlijk team</div><h1>Jouw idee.<br><em>Hun expertise.</em></h1><p>Projectkader is ingeladen. Voeg een vraag toe of druk direct op start.</p></div>
   <div class="input-box"><textarea id="ideaInput" placeholder="Bijv. 'Wat is de beste juridische structuur?' of laat leeg voor volledige analyse."></textarea></div>
@@ -124,13 +143,33 @@ const agents=[
 let results={},ls=new Set(),aid=agents[0].id;
 const grid=document.getElementById('agentGrid');
 agents.forEach(a=>{const c=document.createElement('div');c.className='agent-card';c.innerHTML='<div class="agent-icon" style="background:'+a.bg+'">'+a.emoji+'</div><div><div class="agent-name" style="color:'+a.color+'">'+a.name+'</div><div class="agent-role">'+a.role+'</div></div>';grid.appendChild(c);});
-async function call(agent,idea){const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system:agent.p,messages:[{role:"user",content:"Input: "+(idea||"Volledige analyse.")}]})});const d=await r.json();return d.content?.map(b=>b.text||'').join('')||'Geen respons.';}
+async function call(agent,idea){const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":localStorage.getItem("ca_key")||"","anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system:agent.p,messages:[{role:"user",content:"Input: "+(idea||"Volledige analyse.")}]})});const d=await r.json();return d.content?.map(b=>b.text||'').join('')||'Geen respons.';}
 async function handleSubmit(){const idea=document.getElementById('ideaInput').value.trim();results={};ls=new Set(agents.map(a=>a.id));aid=agents[0].id;document.getElementById('inputScreen').classList.remove('active');document.getElementById('resultsScreen').classList.add('active');document.getElementById('ideaRecap').textContent=idea||'Volledige projectanalyse';document.getElementById('headerBadge').textContent='0/8 klaar';rT();rR();for(const a of agents){try{results[a.id]=await call(a,idea);}catch{results[a.id]='Er ging iets mis.';}ls.delete(a.id);uP();rT();if(aid===a.id)rR();}}
 function uP(){const d=Object.keys(results).length;document.getElementById('progressFill').style.width=(d/agents.length*100)+'%';document.getElementById('progressCount').textContent=d+'/'+agents.length;document.getElementById('headerBadge').textContent=d===agents.length?'Klaar':d+'/'+agents.length+' klaar';}
 function rT(){const c=document.getElementById('agentTabs');c.innerHTML='';agents.forEach(a=>{const isA=a.id===aid,isD=!!results[a.id],isL=ls.has(a.id);const t=document.createElement('button');t.className='tab-pill'+(isA?' active':'')+(isD?' done':'')+(isL?' loading':'');if(isA)t.style.setProperty('--tab-color',a.color);t.innerHTML='<span class="status-dot"></span>'+a.emoji+' '+a.name;t.onclick=()=>{aid=a.id;rT();rR();};c.appendChild(t);});}
 function rR(){const a=agents.find(x=>x.id===aid);const c=document.getElementById('activeResult');if(ls.has(a.id)){c.innerHTML='<div class="result-card"><div class="loading-state"><div class="spinner-ring" style="border-top-color:'+a.color+'"></div><div class="loading-text">'+a.name+' werkt...</div></div></div>';}else if(results[a.id]){c.innerHTML='<div class="result-card"><div class="result-card-header"><div class="result-icon" style="background:'+a.bg+'">'+a.emoji+'</div><div><div class="result-agent-name" style="color:'+a.color+'">'+a.name+'</div><div class="result-agent-role">'+a.role+'</div></div></div><div class="result-body">'+results[a.id]+'</div></div>';}else{c.innerHTML='<div class="result-card"><div class="waiting-state">Wacht...</div></div>';}}
 function reset(){results={};ls=new Set();document.getElementById('ideaInput').value='';document.getElementById('resultsScreen').classList.remove('active');document.getElementById('inputScreen').classList.add('active');document.getElementById('headerBadge').textContent='8 Specialisten';}
 let dp=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;setTimeout(()=>{document.getElementById('installBanner').style.display='flex';},2500);});document.getElementById('installBtn').addEventListener('click',async()=>{if(!dp)return;dp.prompt();await dp.userChoice;dp=null;document.getElementById('installBanner').style.display='none';});
+
+// API Key setup
+function checkApiKey() {
+  const key = localStorage.getItem('ca_key');
+  if (!key) {
+    document.getElementById('setupScreen').classList.add('active');
+    document.getElementById('inputScreen').classList.remove('active');
+  }
+}
+function saveApiKey() {
+  const k = document.getElementById('apiKeyInput').value.trim();
+  if (k.startsWith('sk-ant-')) {
+    localStorage.setItem('ca_key', k);
+    document.getElementById('setupScreen').classList.remove('active');
+    document.getElementById('inputScreen').classList.add('active');
+  } else {
+    alert('Voer een geldige Anthropic API key in (begint met sk-ant-)');
+  }
+}
+checkApiKey();
 </script>
 </body>
 </html>
