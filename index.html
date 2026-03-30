@@ -11,271 +11,481 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-:root{--g:#C9A96E;--g2:#e8c98a;--g3:rgba(201,169,110,0.15);--bl:#0d0d0d;--su:rgba(255,255,255,0.04);--bo:rgba(255,255,255,0.08);--bg:rgba(201,169,110,0.3);--tx:#f0ebe0;--mu:rgba(240,235,224,0.45);--m2:rgba(240,235,224,0.2)}
+:root{--g:#C9A96E;--g2:#e8c98a;--g3:rgba(201,169,110,0.15);--bl:#0d0d0d;--su:rgba(255,255,255,0.04);--bo:rgba(255,255,255,0.08);--bg:rgba(201,169,110,0.3);--tx:#f0ebe0;--mu:rgba(240,235,224,0.45);--m2:rgba(240,235,224,0.2);--gr:#2D6A4F}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:var(--bl);color:var(--tx);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;top:-20%;left:-20%;width:60%;height:60%;background:radial-gradient(circle,rgba(201,169,110,0.08),transparent 70%);pointer-events:none;z-index:0;animation:d1 20s ease-in-out infinite}
 body::after{content:'';position:fixed;bottom:-10%;right:-10%;width:50%;height:50%;background:radial-gradient(circle,rgba(201,169,110,0.05),transparent 70%);pointer-events:none;z-index:0;animation:d2 25s ease-in-out infinite}
 @keyframes d1{0%,100%{transform:translate(0,0)}50%{transform:translate(5%,8%)}}
 @keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-5%,-6%)}}
-@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes sp{to{transform:rotate(360deg)}}
 @keyframes bl{0%,100%{opacity:.2}50%{opacity:1}}
-@keyframes su{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
-.hdr{position:sticky;top:0;z-index:100;padding:env(safe-area-inset-top,0) 20px 0;background:rgba(13,13,13,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--bo)}
-.hdr-i{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
-.logo{font-family:'Playfair Display',serif;font-size:19px;font-weight:700}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.4}}
+.hdr{position:sticky;top:0;z-index:100;padding:env(safe-area-inset-top,0) 18px 0;background:rgba(13,13,13,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--bo)}
+.hdr-i{display:flex;align-items:center;justify-content:space-between;padding:12px 0;gap:8px}
+.logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;flex-shrink:0}
 .logo span{color:var(--g);font-style:italic}
+.hdr-right{display:flex;align-items:center;gap:8px}
 .badge{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--g);background:var(--g3);border:1px solid var(--bg);padding:4px 10px;border-radius:100px}
-.scr{display:none;position:relative;z-index:1}.scr.on{display:block}
-.wrap{padding:28px 18px;padding-bottom:calc(28px + env(safe-area-inset-bottom,0))}
-.hero{margin-bottom:24px;animation:up .5s ease both}
-.hlb{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--g);margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.hlb::before{content:'';display:block;width:20px;height:1px;background:var(--g)}
-.hero h1{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;line-height:1.15;margin-bottom:8px}
+.nav-btn{font-size:11px;color:var(--mu);background:var(--su);border:1px solid var(--bo);border-radius:100px;padding:5px 11px;cursor:pointer;font-family:'Outfit',sans-serif}
+.nav-btn.act{color:var(--g);border-color:var(--bg);background:var(--g3)}
+.scr{display:none;position:relative;z-index:1}
+.scr.on{display:block}
+.wrap{padding:24px 18px;padding-bottom:calc(24px + env(safe-area-inset-bottom,0))}
+.hero{margin-bottom:20px;animation:up .5s ease both}
+.hlb{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--g);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.hlb::before{content:'';display:block;width:18px;height:1px;background:var(--g)}
+.hero h1{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;line-height:1.15;margin-bottom:6px}
 .hero h1 em{color:var(--g);font-style:italic;display:block}
-.hero p{font-size:13px;color:var(--mu);line-height:1.6;font-weight:300}
-.scard{background:var(--su);border:1px solid var(--bg);border-radius:16px;padding:20px;margin-bottom:20px}
-.scard h3{font-family:'Playfair Display',serif;font-size:16px;color:var(--g);margin-bottom:6px}
-.scard p{font-size:12px;color:var(--mu);line-height:1.6;margin-bottom:14px}
-input[type=password]{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--bg);border-radius:12px;padding:14px 16px;font-size:14px;font-family:'Outfit',sans-serif;color:var(--tx);outline:none;margin-bottom:10px}
+.hero p{font-size:12px;color:var(--mu);line-height:1.6;font-weight:300}
+.scard{background:var(--su);border:1px solid var(--bg);border-radius:14px;padding:18px;margin-bottom:18px;animation:up .5s .1s ease both}
+.scard h3{font-family:'Playfair Display',serif;font-size:15px;color:var(--g);margin-bottom:5px}
+.scard p{font-size:12px;color:var(--mu);line-height:1.6;margin-bottom:12px}
+input[type=password]{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--bg);border-radius:11px;padding:13px 15px;font-size:14px;font-family:'Outfit',sans-serif;color:var(--tx);outline:none;margin-bottom:9px}
 input[type=password]::placeholder{color:var(--m2)}
-.kerr{color:#ef4444;font-size:11px;margin-bottom:10px;display:none}
-textarea{width:100%;min-height:100px;background:var(--su);border:1px solid var(--bo);border-radius:14px;padding:14px 16px;font-size:14px;font-family:'Outfit',sans-serif;font-weight:300;color:var(--tx);resize:none;outline:none;line-height:1.6;margin-bottom:10px;transition:border-color .3s,box-shadow .3s}
+.kerr{color:#ef4444;font-size:11px;margin-bottom:9px;display:none}
+textarea{width:100%;min-height:90px;background:var(--su);border:1px solid var(--bo);border-radius:13px;padding:13px 15px;font-size:14px;font-family:'Outfit',sans-serif;font-weight:300;color:var(--tx);resize:none;outline:none;line-height:1.6;margin-bottom:10px;transition:border-color .3s,box-shadow .3s}
 textarea::placeholder{color:var(--m2)}
 textarea:focus{border-color:var(--bg);box-shadow:0 0 0 3px rgba(201,169,110,.06)}
-.ctx{display:flex;align-items:flex-start;gap:9px;padding:10px 14px;background:rgba(45,106,79,.08);border:1px solid rgba(45,106,79,.2);border-radius:12px;font-size:11px;color:rgba(240,235,224,.5);line-height:1.6;margin-bottom:20px}
-.cdot{width:7px;height:7px;border-radius:50%;background:#2D6A4F;flex-shrink:0;margin-top:3px}
+.ctx{display:flex;align-items:flex-start;gap:8px;padding:9px 13px;background:rgba(45,106,79,.08);border:1px solid rgba(45,106,79,.2);border-radius:11px;font-size:11px;color:rgba(240,235,224,.5);line-height:1.6;margin-bottom:18px}
+.cdot{width:6px;height:6px;border-radius:50%;background:#2D6A4F;flex-shrink:0;margin-top:3px}
 .ctx strong{color:#3d9970}
-.albl{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:8px}
-.agrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:20px}
-.acard{background:var(--su);border:1px solid var(--bo);border-radius:13px;padding:12px;display:flex;align-items:center;gap:9px}
-.aico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.albl{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:7px}
+.agrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:18px}
+.acard{background:var(--su);border:1px solid var(--bo);border-radius:12px;padding:11px;display:flex;align-items:center;gap:8px}
+.aico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 .anm{font-size:11px;font-weight:500;line-height:1.2}
-.arl{font-size:10px;color:var(--mu);margin-top:2px;font-weight:300}
-.cta{width:100%;background:linear-gradient(135deg,var(--g),var(--g2));color:#0d0d0d;border:none;border-radius:14px;padding:16px;font-size:12px;font-family:'Outfit',sans-serif;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 18px rgba(201,169,110,.25);position:relative;overflow:hidden;transition:transform .15s}
+.arl{font-size:9px;color:var(--mu);margin-top:1px;font-weight:300}
+.cta{width:100%;background:linear-gradient(135deg,var(--g),var(--g2));color:#0d0d0d;border:none;border-radius:13px;padding:15px;font-size:11px;font-family:'Outfit',sans-serif;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 16px rgba(201,169,110,.22);position:relative;overflow:hidden;transition:transform .15s;margin-bottom:8px}
 .cta::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 55%);pointer-events:none}
 .cta:active{transform:scale(.98)}
-.kstat{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--mu);margin-top:12px;cursor:pointer;padding:8px 0}
-.kd{width:6px;height:6px;border-radius:50%;background:#4ade80}.kd.off{background:#ef4444}
-.rtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
-.rtl{font-family:'Playfair Display',serif;font-size:20px;font-weight:700}
-.brow{display:flex;gap:6px;flex-wrap:wrap}
-.rb{font-size:11px;font-weight:500;color:var(--g);background:var(--g3);border:1px solid var(--bg);border-radius:100px;padding:6px 12px;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap}
+.cta.syn{background:linear-gradient(135deg,#1a472a,#2D6A4F);color:#a8e6c1;box-shadow:0 4px 16px rgba(45,106,79,.3)}
+.kstat{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mu);margin-top:8px;cursor:pointer;padding:6px 0}
+.kd{width:5px;height:5px;border-radius:50%;background:#4ade80}
+.kd.off{background:#ef4444}
+
+/* HISTORY SCREEN */
+.hist-empty{text-align:center;padding:60px 20px;color:var(--mu);font-size:13px}
+.hist-item{background:var(--su);border:1px solid var(--bo);border-radius:13px;padding:14px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
+.hist-item:active{border-color:var(--bg)}
+.hist-title{font-size:13px;font-weight:500;margin-bottom:4px;color:var(--tx)}
+.hist-meta{font-size:11px;color:var(--mu);display:flex;justify-content:space-between}
+.hist-del{font-size:11px;color:#ef4444;background:transparent;border:none;cursor:pointer;font-family:'Outfit',sans-serif;padding:4px 0}
+
+/* RESULTS */
+.rtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:7px}
+.rtl{font-family:'Playfair Display',serif;font-size:19px;font-weight:700}
+.brow{display:flex;gap:5px;flex-wrap:wrap}
+.rb{font-size:10px;font-weight:500;color:var(--g);background:var(--g3);border:1px solid var(--bg);border-radius:100px;padding:5px 11px;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap}
 .rb.dk{background:var(--su);color:var(--mu);border-color:var(--bo)}
-.irec{background:var(--su);border-left:3px solid var(--g);border-radius:0 10px 10px 0;padding:10px 14px;font-size:12px;color:var(--mu);font-style:italic;line-height:1.5;margin-bottom:14px}
-.pw{margin-bottom:16px}.ph{display:flex;justify-content:space-between;margin-bottom:6px}
-.pl{font-size:11px;color:var(--mu);font-weight:300}.pc{font-size:11px;color:var(--g);font-weight:600}
+.rb.gn{background:rgba(45,106,79,.15);color:#4ade80;border-color:rgba(45,106,79,.4)}
+.irec{background:var(--su);border-left:3px solid var(--g);border-radius:0 10px 10px 0;padding:9px 13px;font-size:12px;color:var(--mu);font-style:italic;line-height:1.5;margin-bottom:12px}
+.pw{margin-bottom:14px}
+.ph{display:flex;justify-content:space-between;margin-bottom:5px}
+.pl{font-size:11px;color:var(--mu);font-weight:300}
+.pc{font-size:11px;color:var(--g);font-weight:600}
 .pt{height:2px;background:var(--bo);border-radius:2px;overflow:hidden}
 .pf{height:100%;background:linear-gradient(90deg,var(--g),var(--g2));border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1)}
-.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:12px;margin-bottom:12px;scrollbar-width:none}
+.tabs{display:flex;gap:5px;overflow-x:auto;padding-bottom:10px;margin-bottom:10px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:7px 12px;background:var(--su);border:1px solid var(--bo);border-radius:100px;font-size:11px;font-family:'Outfit',sans-serif;color:var(--mu);cursor:pointer;white-space:nowrap;transition:all .2s}
+.tab{flex-shrink:0;display:flex;align-items:center;gap:4px;padding:6px 11px;background:var(--su);border:1px solid var(--bo);border-radius:100px;font-size:10px;font-family:'Outfit',sans-serif;color:var(--mu);cursor:pointer;white-space:nowrap;transition:all .2s}
 .tab.on{background:var(--tc,var(--g));border-color:var(--tc,var(--g));color:#fff;font-weight:600}
-.sd{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.4}
-.tab.dn .sd{opacity:1;background:#4ade80}.tab.ld .sd{animation:bl 1s ease-in-out infinite}
-.rc{background:var(--su);border:1px solid var(--bo);border-radius:16px;overflow:hidden;animation:up .3s ease both}
-.rch{padding:16px 16px 12px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:12px}
-.rci{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
-.rcn{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;line-height:1.2}
-.rcr{font-size:10px;color:var(--mu);font-weight:300;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
-.rcb{padding:16px;font-size:13px;line-height:1.85;color:rgba(240,235,224,.8);white-space:pre-wrap;font-weight:300}
-.pb{margin:0 16px 16px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--g);background:var(--g3);border:1px solid var(--bg);border-radius:100px;padding:7px 14px;cursor:pointer;font-family:'Outfit',sans-serif;width:fit-content}
-.lst{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 20px;gap:12px}
-.sp{width:34px;height:34px;border-radius:50%;border:2px solid var(--bo);border-top-color:var(--g);animation:sp .9s linear infinite}
+.tab.syn-tab{background:rgba(45,106,79,.2);border-color:rgba(45,106,79,.5);color:#4ade80}
+.tab.syn-tab.on{background:#2D6A4F;border-color:#2D6A4F;color:#fff}
+.sd{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.4}
+.tab.dn .sd{opacity:1;background:#4ade80}
+.tab.ld .sd{animation:bl 1s ease-in-out infinite}
+.rc{background:var(--su);border:1px solid var(--bo);border-radius:14px;overflow:hidden;animation:up .3s ease both}
+.rch{padding:14px 14px 11px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:11px}
+.rci{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rcn{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;line-height:1.2}
+.rcr{font-size:9px;color:var(--mu);font-weight:300;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.rcb{padding:14px;font-size:13px;line-height:1.85;color:rgba(240,235,224,.82);white-space:pre-wrap;font-weight:300}
+.pb{margin:0 14px 14px;display:flex;align-items:center;gap:5px;font-size:10px;color:var(--g);background:var(--g3);border:1px solid var(--bg);border-radius:100px;padding:6px 13px;cursor:pointer;font-family:'Outfit',sans-serif;width:fit-content}
+.syn-banner{background:rgba(45,106,79,.1);border:1px solid rgba(45,106,79,.3);border-radius:13px;padding:14px;margin-bottom:14px;animation:up .4s ease both}
+.syn-banner h3{font-family:'Playfair Display',serif;font-size:15px;color:#4ade80;margin-bottom:4px}
+.syn-banner p{font-size:12px;color:rgba(240,235,224,.5);line-height:1.5}
+.lst{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 20px;gap:11px}
+.sp{width:32px;height:32px;border-radius:50%;border:2px solid var(--bo);border-top-color:var(--g);animation:sp .9s linear infinite}
 .lt{font-size:12px;color:var(--mu);font-weight:300}
-.ws{display:flex;align-items:center;justify-content:center;padding:56px 20px;font-size:12px;color:var(--m2)}
-.es{padding:20px;font-size:13px;color:#ef4444;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:12px;margin:8px}
-.ib{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0));left:14px;right:14px;background:rgba(16,16,16,.96);backdrop-filter:blur(20px);border:1px solid var(--bg);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:10px;z-index:200;box-shadow:0 14px 36px rgba(0,0,0,.6);animation:su .4s cubic-bezier(.4,0,.2,1)}
-.ii{font-size:24px;flex-shrink:0}.it{flex:1}
-.it strong{font-size:13px;font-weight:600;display:block}.it span{font-size:11px;color:var(--mu)}
-.ibtn{background:linear-gradient(135deg,var(--g),var(--g2));color:#0d0d0d;border:none;border-radius:100px;padding:8px 14px;font-size:11px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer}
+.ws{display:flex;align-items:center;justify-content:center;padding:50px 20px;font-size:12px;color:var(--m2)}
+.es{padding:18px;font-size:13px;color:#ef4444;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:11px;margin:7px}
+.ib{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0));left:14px;right:14px;background:rgba(16,16,16,.96);backdrop-filter:blur(20px);border:1px solid var(--bg);border-radius:15px;padding:13px 15px;display:flex;align-items:center;gap:10px;z-index:200;box-shadow:0 12px 32px rgba(0,0,0,.6)}
+.ii{font-size:22px;flex-shrink:0}.it{flex:1}
+.it strong{font-size:13px;font-weight:600;display:block}
+.it span{font-size:11px;color:var(--mu)}
+.ibtn{background:linear-gradient(135deg,var(--g),var(--g2));color:#0d0d0d;border:none;border-radius:100px;padding:8px 13px;font-size:11px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer}
 .ic{background:transparent;border:none;color:var(--mu);font-size:18px;cursor:pointer;flex-shrink:0}
-.synth-wrap{background:var(--su);border:1px solid var(--bg);border-radius:16px;padding:20px;margin-top:16px}
-.synth-wrap h3{font-family:'Playfair Display',serif;font-size:18px;color:var(--g);margin-bottom:6px}
-.synth-wrap p{font-size:12px;color:var(--mu);margin-bottom:14px;line-height:1.6}
-.synth-body{font-size:13px;line-height:1.85;color:rgba(240,235,224,.85);white-space:pre-wrap;font-weight:300;margin-top:12px}
 </style>
 </head>
 <body>
-<div class="hdr"><div class="hdr-i"><div class="logo">Charly's <span>Agents</span></div><div class="badge" id="hbadge">8 Specialisten</div></div></div>
 
-<div class="scr" id="S"><div class="wrap">
-  <div class="hero"><div class="hlb">Eenmalige instelling</div><h1>API Key<br><em>Instellen.</em></h1><p>Voer je Anthropic API key in. Veilig opgeslagen op jouw apparaat.</p></div>
-  <div class="scard"><h3>&#128273; Waar vind je je key?</h3><p>Ga naar <strong>console.anthropic.com</strong> &rarr; API Keys &rarr; Create new key.</p>
-  <input type="password" id="ki" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false"/>
-  <div class="kerr" id="ke">Voer een geldige key in (begint met sk-ant-)</div>
-  <button class="cta" onclick="saveK()">Opslaan &amp; starten &rarr;</button></div>
-</div></div>
+<div class="hdr">
+  <div class="hdr-i">
+    <div class="logo">Charly's <span>Agents</span></div>
+    <div class="hdr-right">
+      <button class="nav-btn" id="nb-h" onclick="showHist()">Geschiedenis</button>
+      <div class="badge" id="hbadge">8 Specialisten</div>
+    </div>
+  </div>
+</div>
 
-<div class="scr" id="I"><div class="wrap">
-  <div class="hero"><div class="hlb">Jouw persoonlijk team</div><h1>Jouw idee.<br><em>Hun expertise.</em></h1><p>Projectkader ingeladen. Voeg een vraag toe of druk direct op start.</p></div>
-  <textarea id="ii" placeholder="Bijv. Wat is de beste juridische structuur? Of laat leeg voor volledige analyse."></textarea>
-  <div class="ctx"><div class="cdot"></div><div><strong>Ingeladen:</strong> 10 off-grid woonarken (15x5m) &middot; Apeldoorns Kanaal &middot; Verhuur &amp; verkoop &middot; Waterschap positief &middot; Vergunning mei 2026 &middot; Molly VR &middot; 400k &middot; Ruim budget</div></div>
-  <div class="albl">Jouw team</div>
-  <div class="agrid" id="ag"></div>
-  <button class="cta" onclick="go()">Zet mijn team aan het werk &rarr;</button>
-  <div class="kstat" onclick="resetK()"><div class="kd" id="kd"></div><span id="kl">API key actief</span></div>
-</div></div>
+<!-- SETUP -->
+<div class="scr" id="S">
+  <div class="wrap">
+    <div class="hero"><div class="hlb">Eenmalige instelling</div><h1>API Key<br><em>Instellen.</em></h1><p>Voer je Anthropic API key in. Veilig opgeslagen op jouw apparaat.</p></div>
+    <div class="scard">
+      <h3>&#128273; Waar vind je je key?</h3>
+      <p>Ga naar <strong>console.anthropic.com</strong> &rarr; API Keys &rarr; Create new key.</p>
+      <input type="password" id="ki" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false"/>
+      <div class="kerr" id="ke">Voer een geldige key in (begint met sk-ant-)</div>
+      <button class="cta" onclick="saveK()">Opslaan &amp; starten &rarr;</button>
+    </div>
+  </div>
+</div>
 
-<div class="scr" id="R"><div class="wrap">
-  <div class="rtop"><div class="rtl">Analyse</div><div class="brow">
-    <button class="rb" onclick="synthAll()">&#129504; Maak Masterplan</button>
-    <button class="rb" onclick="allPDF()">&#128196; Totaal PDF</button>
-    <button class="rb dk" onclick="rst()">&#8617; Nieuw</button>
-  </div></div>
-  <div class="irec" id="ir"></div>
-  <div class="pw"><div class="ph"><div class="pl">Voortgang team</div><div class="pc" id="pc">0 / 8</div></div><div class="pt"><div class="pf" id="pf" style="width:0%"></div></div></div>
-  <div class="tabs" id="tabs"></div>
-  <div id="res"></div>
-  <div id="synthbox"></div>
-</div></div>
+<!-- INPUT -->
+<div class="scr" id="I">
+  <div class="wrap">
+    <div class="hero"><div class="hlb">Jouw persoonlijk team</div><h1>Jouw idee.<br><em>Hun expertise.</em></h1><p>Projectkader ingeladen. Voeg een vraag toe of druk direct op start.</p></div>
+    <textarea id="ii" placeholder="Bijv. 'Wat is de beste juridische structuur?' of laat leeg voor volledige analyse."></textarea>
+    <div class="ctx"><div class="cdot"></div><div><strong>Ingeladen:</strong> 10 off-grid woonarken (15x5m) &middot; Apeldoorns Kanaal &middot; Verhuur &amp; verkoop &middot; Waterschap positief &middot; Vergunning mei 2026 &middot; Molly VR &middot; 400k &middot; Ruim budget</div></div>
+    <div class="albl">Jouw team</div>
+    <div class="agrid" id="ag"></div>
+    <button class="cta" onclick="go(false)">Zet mijn team aan het werk &rarr;</button>
+    <button class="cta syn" onclick="go(true)">&#9881;&#65039; Syntheseer &mdash; 1 geintegreerd actieplan</button>
+    <div class="kstat" onclick="resetK()"><div class="kd" id="kd"></div><span id="kl">API key actief</span></div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="scr" id="H">
+  <div class="wrap">
+    <div class="hero"><div class="hlb">Opgeslagen analyses</div><h1>Jouw<br><em>Geschiedenis.</em></h1></div>
+    <div id="hlist"></div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="scr" id="R">
+  <div class="wrap">
+    <div class="rtop">
+      <div class="rtl">Analyse</div>
+      <div class="brow">
+        <button class="rb gn" onclick="saveHist()">&#128190; Opslaan</button>
+        <button class="rb" onclick="allPDF()">&#128196; PDF</button>
+        <button class="rb dk" onclick="show('I')">&#8617; Nieuw</button>
+      </div>
+    </div>
+    <div class="irec" id="ir"></div>
+    <div class="pw"><div class="ph"><div class="pl">Voortgang</div><div class="pc" id="pc">0 / 8</div></div><div class="pt"><div class="pf" id="pf" style="width:0%"></div></div></div>
+    <div class="tabs" id="tabs"></div>
+    <div id="res"></div>
+  </div>
+</div>
 
 <div class="ib" id="ib" style="display:none">
-  <div class="ii">&#128241;</div><div class="it"><strong>Installeer als app</strong><span>Altijd bij de hand</span></div>
+  <div class="ii">&#128241;</div>
+  <div class="it"><strong>Installeer als app</strong><span>Altijd bij de hand</span></div>
   <button class="ibtn" id="ibt">Installeer</button>
   <button class="ic" onclick="document.getElementById('ib').style.display='none'">&#215;</button>
 </div>
 
 <script>
-var PC="Je werkt voor Chiel van Tongeren (Charly) uit Apeldoorn. PROJECT: 10 off-grid woonarken 15x5 meter op het Apeldoorns Kanaal. EXPLOITATIE: verhuur en verkoop. WATERSCHAP: Vallei Veluwe positief, vergunning gemeente Apeldoorn verwacht mei 2026. VISUALISATIE: Molly VR Bratislava 3D renders verkoop op tekening. PRIJS: 400000 euro per woonark, off-grid kosten in prijs. BUDGET: ruim. ROL: initiatiefnemer geen ontwikkelaar zoekt partners. Schrijf ALTIJD in het Nederlands.";
-var AG=[
+var PC = "Je werkt voor Chiel van Tongeren (Charly) uit Apeldoorn. PROJECT: 10 off-grid woonarken 15x5 meter op het Apeldoorns Kanaal. EXPLOITATIE: verhuur en verkoop. WATERSCHAP: Vallei Veluwe positief, vergunning gemeente Apeldoorn verwacht mei 2026. VISUALISATIE: Molly VR Bratislava 3D renders verkoop op tekening. PRIJS: 400000 euro per woonark, off-grid kosten in prijs. BUDGET: ruim. ROL: initiatiefnemer geen ontwikkelaar zoekt partners. Schrijf ALTIJD in het Nederlands. Wees concreet en praktisch.";
+
+var AG = [
   {id:"st",nm:"De Strateeg",em:"&#129504;",cl:"#2D6A4F",bg:"rgba(45,106,79,.15)",rl:"Roadmap",sy:"Je bent De Strateeg. "+PC+" Maak concrete roadmap met fases tot eerste verhuur/verkoop. Benoem kritische beslismomenten rond vergunning mei 2026."},
-  {id:"pm",nm:"De Projectmanager",em:"&#128203;",cl:"#4A90D9",bg:"rgba(74,144,217,.15)",rl:"Planning",sy:"Je bent De Projectmanager. "+PC+" Maak projectstructuur met taken, mijlpalen en risicos."},
+  {id:"pm",nm:"De Projectmanager",em:"&#128203;",cl:"#4A90D9",bg:"rgba(74,144,217,.15)",rl:"Planning",sy:"Je bent De Projectmanager. "+PC+" Maak projectstructuur met taken, verantwoordelijkheden, mijlpalen en risicos."},
   {id:"co",nm:"De Communicator",em:"&#10000;",cl:"#C9A96E",bg:"rgba(201,169,110,.15)",rl:"Marketing",sy:"Je bent De Communicator. "+PC+" Schrijf krachtige projectpitch max 1 A4 en marketingaanpak voor kopers en huurders."},
-  {id:"ma",nm:"De Marktanalist",em:"&#127919;",cl:"#E05C8A",bg:"rgba(224,92,138,.15)",rl:"Doelgroep",sy:"Je bent De Marktanalist. "+PC+" Analyseer ideale kopers en huurders: motivaties, leefstijl, inkomen, positionering."},
-  {id:"re",nm:"De Researcher",em:"&#128269;",cl:"#9B59B6",bg:"rgba(155,89,182,.15)",rl:"Regelgeving",sy:"Je bent De Researcher. "+PC+" Volledig overzicht wet- en regelgeving, vergunningen, subsidies."},
-  {id:"an",nm:"De Analist",em:"&#128290;",cl:"#E67E22",bg:"rgba(230,126,34,.15)",rl:"Financien",sy:"Je bent De Analist. "+PC+" Financiele haalbaarheidsanalyse verhuur en verkoop scenario."},
-  {id:"bo",nm:"De Ontwikkelaar",em:"&#127959;",cl:"#27AE60",bg:"rgba(39,174,96,.15)",rl:"Bouw",sy:"Je bent De Ontwikkelaar. "+PC+" Bouwkundig advies 15x5m woonark: specs, off-grid systemen, scheepswerven, bouwtijd."},
-  {id:"ju",nm:"De Jurist",em:"&#9878;",cl:"#2E86AB",bg:"rgba(46,134,171,.15)",rl:"Juridisch",sy:"Je bent De Jurist. "+PC+" Juridisch advies: rechtsvorm, waterrecht Vallei Veluwe, veilige verhuur/verkoop op tekening, contracten."}
+  {id:"ma",nm:"De Marktanalist",em:"&#127919;",cl:"#E05C8A",bg:"rgba(224,92,138,.15)",rl:"Doelgroep",sy:"Je bent De Marktanalist. "+PC+" Analyseer ideale kopers en huurders: motivaties, leefstijl, inkomen, positionering, verkoopargumenten."},
+  {id:"re",nm:"De Researcher",em:"&#128269;",cl:"#9B59B6",bg:"rgba(155,89,182,.15)",rl:"Regelgeving",sy:"Je bent De Researcher. "+PC+" Volledig overzicht wet- en regelgeving, vergunningen, subsidies, aandachtspunten Apeldoorns Kanaal."},
+  {id:"an",nm:"De Analist",em:"&#128290;",cl:"#E67E22",bg:"rgba(230,126,34,.15)",rl:"Financien",sy:"Je bent De Analist. "+PC+" Financiele haalbaarheidsanalyse verhuur en verkoop scenario met realistische marktprijzen."},
+  {id:"bo",nm:"De Ontwikkelaar",em:"&#127959;",cl:"#27AE60",bg:"rgba(39,174,96,.15)",rl:"Bouw",sy:"Je bent De Ontwikkelaar. "+PC+" Bouwkundig advies 15x5m woonark: specs, off-grid systemen solar water warmte, scheepswerven Nederland, bouwtijd."},
+  {id:"ju",nm:"De Jurist",em:"&#9878;",cl:"#2E86AB",bg:"rgba(46,134,171,.15)",rl:"Juridisch",sy:"Je bent De Jurist. "+PC+" Juridisch advies: rechtsvorm, waterrecht Vallei Veluwe, veilige verkoop verhuur op tekening, risicos, contracten."}
 ];
-var RES={},LS=new Set(),AID=AG[0].id,IDEA="";
 
-function gK(){return localStorage.getItem("ca_key")||"";}
-function saveK(){var k=(document.getElementById("ki").value||"").trim();var e=document.getElementById("ke");if(!k.startsWith("sk-ant-")){e.style.display="block";return;}e.style.display="none";localStorage.setItem("ca_key",k);show("I");updK();}
-function resetK(){if(confirm("Wil je je API key wijzigen?")){localStorage.removeItem("ca_key");show("S");}}
-function updK(){var ok=!!gK();document.getElementById("kd").className=ok?"kd":"kd off";document.getElementById("kl").textContent=ok?"API key actief - tik om te wijzigen":"Geen API key - tik om in te stellen";}
-function show(id){var a=document.querySelectorAll(".scr");for(var i=0;i<a.length;i++)a[i].classList.remove("on");document.getElementById(id).classList.add("on");window.scrollTo(0,0);}
+var RES = {}, LS = new Set(), AID = AG[0].id, IDEA = "", SYN_MODE = false, SYN_RESULT = "";
 
-var gr=document.getElementById("ag");
-AG.forEach(function(a){var c=document.createElement("div");c.className="acard";c.innerHTML='<div class="aico" style="background:'+a.bg+'">'+a.em+'</div><div><div class="anm" style="color:'+a.cl+'">'+a.nm+'</div><div class="arl">'+a.rl+'</div></div>';gr.appendChild(c);});
-
-async function callA(a,idea,sys){
-  var key=gK();if(!key)throw new Error("Geen API key");
-  var r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1024,system:sys||a.sy,messages:[{role:"user",content:idea?"Aanvullende vraag van Chiel: "+idea:"Geef een volledige analyse op basis van de projectcontext."}]})});
-  if(!r.ok){var e={};try{e=await r.json();}catch(x){}throw new Error((e.error&&e.error.message)||"HTTP "+r.status);}
-  var d=await r.json();if(d.error)throw new Error(d.error.message||"API fout");
-  return(d.content||[]).map(function(b){return b.text||"";}).join("")||"Geen inhoud ontvangen.";
+function gK() { return localStorage.getItem("ca_key") || ""; }
+function saveK() {
+  var k = (document.getElementById("ki").value || "").trim();
+  var e = document.getElementById("ke");
+  if (!k.startsWith("sk-ant-")) { e.style.display = "block"; return; }
+  e.style.display = "none";
+  localStorage.setItem("ca_key", k);
+  show("I"); updK();
+}
+function resetK() {
+  if (confirm("Wil je je API key wijzigen?")) { localStorage.removeItem("ca_key"); show("S"); }
+}
+function updK() {
+  var ok = !!gK();
+  document.getElementById("kd").className = ok ? "kd" : "kd off";
+  document.getElementById("kl").textContent = ok ? "API key actief - tik om te wijzigen" : "Geen API key - tik om in te stellen";
 }
 
-async function go(){
-  if(!gK()){show("S");return;}
-  IDEA=document.getElementById("ii").value.trim();
-  RES={};LS=new Set(AG.map(function(a){return a.id;}));AID=AG[0].id;
-  document.getElementById("synthbox").innerHTML="";
-  show("R");
-  document.getElementById("ir").textContent=IDEA||"Volledige projectanalyse - 10 woonarken 15x5m - Apeldoorns Kanaal";
-  document.getElementById("hbadge").textContent="0 / 8 klaar";
-  rTabs();rRes();
-  for(var i=0;i<AG.length;i++){var a=AG[i];try{RES[a.id]=await callA(a,IDEA);}catch(e){RES[a.id]="__E__"+e.message;}LS.delete(a.id);upP();rTabs();if(AID===a.id)rRes();}
-  // Save to localStorage
-  try{localStorage.setItem("ca_last",JSON.stringify({idea:IDEA,results:RES,ts:Date.now()}));}catch(e){}
+function show(id) {
+  var all = document.querySelectorAll(".scr");
+  for (var i = 0; i < all.length; i++) all[i].classList.remove("on");
+  document.getElementById(id).classList.add("on");
+  window.scrollTo(0, 0);
+  // Update nav buttons
+  document.getElementById("nb-h").className = id === "H" ? "nav-btn act" : "nav-btn";
 }
 
-async function synthAll(){
-  var done=AG.filter(function(a){return RES[a.id]&&!RES[a.id].startsWith("__E__");});
-  if(done.length<3){alert("Wacht tot minstens 3 agents klaar zijn.");return;}
-  var box=document.getElementById("synthbox");
-  box.innerHTML='<div class="synth-wrap"><h3>&#129504; Masterplan wordt gemaakt...</h3><p>De agents overleggen onderling om tot een concreet gezamenlijk plan te komen.</p><div class="lst"><div class="sp"></div><div class="lt">Synthese bezig...</div></div></div>';
-  box.scrollIntoView({behavior:"smooth"});
-  var summary=done.map(function(a){return "=== "+a.nm.toUpperCase()+" ===
-"+RES[a.id];}).join("
+function showHist() { renderHist(); show("H"); }
+
+// Build agent grid
+var g = document.getElementById("ag");
+AG.forEach(function(a) {
+  var c = document.createElement("div");
+  c.className = "acard";
+  c.innerHTML = '<div class="aico" style="background:' + a.bg + '">' + a.em + '</div><div><div class="anm" style="color:' + a.cl + '">' + a.nm + '</div><div class="arl">' + a.rl + '</div></div>';
+  g.appendChild(c);
+});
+
+async function callA(a, idea) {
+  var key = gK();
+  if (!key) throw new Error("Geen API key");
+  var resp = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
+    body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1024, system: a.sy, messages: [{ role: "user", content: idea ? "Aanvullende vraag van Chiel: " + idea : "Geef een volledige analyse op basis van de projectcontext." }] })
+  });
+  if (!resp.ok) {
+    var err = {}; try { err = await resp.json(); } catch(x) {}
+    throw new Error((err.error && err.error.message) || "HTTP " + resp.status);
+  }
+  var d = await resp.json();
+  if (d.error) throw new Error(d.error.message || "API fout");
+  return (d.content || []).map(function(b) { return b.text || ""; }).join("") || "Geen inhoud ontvangen.";
+}
+
+async function callSynthesis(allResults, idea) {
+  var key = gK();
+  var combined = AG.map(function(a) {
+    return "=== " + a.nm.toUpperCase() + " ===
+" + (allResults[a.id] || "Niet beschikbaar");
+  }).join("
 
 ");
-  var sys="Je bent een senior projectdirecteur. Je hebt de analyses van 8 specialisten ontvangen voor een project van Chiel van Tongeren. "+PC+" Jouw taak: synthetiseer alle analyses tot 1 concreet, geintegreerd MASTERPLAN. Structuur: 1) Samenvatting & Go/No-Go advies, 2) Kritische acties komende 90 dagen, 3) Budget samenvatting, 4) Juridische structuur aanbeveling, 5) Eerste verkoop/verhuur strategie, 6) Risicos & mitigatie. Wees concreet, direct en actionable. Schrijf in het Nederlands.";
-  try{
-    var result=await callA(null,null,sys);
-    // Override with actual summaries
-    var r2=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":gK(),"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:2048,system:sys,messages:[{role:"user",content:"Hier zijn de analyses van mijn team:
+  var sysPr = "Je bent een senior projectadviseur die werkt voor Chiel van Tongeren (Charly). " + PC + " Je hebt de analyses van 8 specialisten ontvangen. Jouw taak: synthetiseer alles tot EEN concreet, geintegreerd actieplan met: 1) TOP 5 acties die Chiel MORGEN kan starten, 2) Kritisch pad (wat blokkeert alles?), 3) Financiele samenvatting in 3 bullets, 4) Juridische must-haves voor start, 5) Aanbevolen eerste 3 partners om te benaderen. Wees CONCREET en ACTIONABLE. Geen herhaling, geen vaagheden.";
+  var resp = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
+    body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 2048, system: sysPr, messages: [{ role: "user", content: "Hier zijn de analyses van alle 8 specialists:
 
-"+summary+"
+" + combined + (idea ? "
 
-Maak nu het Masterplan."}]})});
-    var d2=await r2.json();
-    var masterplan=(d2.content||[]).map(function(b){return b.text||"";}).join("")||result;
-    box.innerHTML='<div class="synth-wrap"><h3>&#129504; Masterplan</h3><p>Gebaseerd op de gezamenlijke analyses van alle '+done.length+' specialisten.</p><div class="synth-body">'+masterplan+'</div><button class="pb" style="margin:16px 0 0" onclick="synthPDF()">&#128196; Download Masterplan PDF</button></div>';
-    window._masterplan=masterplan;
-    try{var saved=JSON.parse(localStorage.getItem("ca_last")||"{}");saved.masterplan=masterplan;localStorage.setItem("ca_last",JSON.stringify(saved));}catch(e){}
-  }catch(e){box.innerHTML='<div class="synth-wrap"><div class="es">Fout: '+e.message+'</div></div>';}
-}
+Extra context van Chiel: " + idea : "") + "
 
-function synthPDF(){
-  if(!window._masterplan)return;
-  mkPDF([{id:"mp",nm:"Masterplan",em:"&#129504;",cl:"#C9A96E",bg:"rgba(201,169,110,.15)",rl:"Gezamenlijk plan alle specialisten"}],IDEA,"Masterplan - Charly's Agents",window._masterplan);
-}
-
-function upP(){var d=Object.keys(RES).length;document.getElementById("pf").style.width=(d/AG.length*100)+"%";document.getElementById("pc").textContent=d+" / "+AG.length;document.getElementById("hbadge").textContent=d===AG.length?"Klaar":d+" / "+AG.length+" klaar";}
-
-function rTabs(){var c=document.getElementById("tabs");c.innerHTML="";AG.forEach(function(a){var isA=a.id===AID,isD=!!RES[a.id],isL=LS.has(a.id),isE=isD&&RES[a.id].startsWith("__E__");var t=document.createElement("button");t.className="tab"+(isA?" on":"")+(isD&&!isE?" dn":"")+(isL?" ld":"");if(isA)t.style.setProperty("--tc",a.cl);t.innerHTML='<span class="sd"></span>'+a.nm;t.onclick=(function(id){return function(){AID=id;rTabs();rRes();};})(a.id);c.appendChild(t);});}
-
-function rRes(){var a=AG.filter(function(x){return x.id===AID;})[0];var c=document.getElementById("res");if(LS.has(a.id)){c.innerHTML='<div class="rc"><div class="lst"><div class="sp" style="border-top-color:'+a.cl+'"></div><div class="lt">'+a.nm+' is aan het werk...</div></div></div>';return;}if(!RES[a.id]){c.innerHTML='<div class="rc"><div class="ws">Wacht op andere agents...</div></div>';return;}if(RES[a.id].startsWith("__E__")){c.innerHTML='<div class="rc"><div class="es"><strong>Fout bij '+a.nm+':</strong><br><br>'+RES[a.id].replace("__E__","")+'</div></div>';return;}c.innerHTML='<div class="rc"><div class="rch"><div class="rci" style="background:'+a.bg+'">'+a.em+'</div><div><div class="rcn" style="color:'+a.cl+'">'+a.nm+'</div><div class="rcr">'+a.rl+'</div></div></div><div class="rcb">'+RES[a.id]+'</div><button class="pb" onclick="aPDF(''+a.id+'')">&#128196; Download PDF - '+a.nm+'</button></div>';}
-
-function aPDF(id){var a=AG.filter(function(x){return x.id===id;})[0];if(!a||!RES[a.id]||RES[a.id].startsWith("__E__"))return;mkPDF([a],IDEA,a.nm+" - Charly's Agents",RES[a.id]);}
-function allPDF(){var done=AG.filter(function(a){return RES[a.id]&&!RES[a.id].startsWith("__E__");});if(!done.length){alert("Wacht tot de agents klaar zijn.");return;}mkPDF(done,IDEA,"Charly's Agents - Totaalrapport",null);}
-function hxRgb(h){return{r:parseInt(h.slice(1,3),16),g:parseInt(h.slice(3,5),16),b:parseInt(h.slice(5,7),16)};}
-
-function mkPDF(list,idea,title,override){
-  if(!window.jspdf){alert("PDF library laadt nog, probeer opnieuw.");return;}
-  var doc=new window.jspdf.jsPDF({unit:"mm",format:"a4"});
-  var W=210,m=18,lw=W-m*2,y=0;
-  function ap(){doc.addPage();y=m;}function cy(n){if(y+n>280)ap();}
-  doc.setFillColor(13,13,13);doc.rect(0,0,W,297,"F");
-  doc.setTextColor(201,169,110);doc.setFontSize(26);doc.setFont("helvetica","bold");doc.text("Charly's Agents",m,55);
-  doc.setFontSize(13);doc.setFont("helvetica","normal");doc.setTextColor(240,235,224);doc.text(title,m,68);
-  if(idea){doc.setFontSize(10);doc.setTextColor(180,170,150);doc.text(doc.splitTextToSize('"'+idea+'"',lw),m,80);}
-  doc.setFontSize(9);doc.setTextColor(120,110,90);doc.text(new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"long",year:"numeric"}),m,280);
-  doc.addPage();
-  list.forEach(function(a,idx){
-    y=m;var rgb=hxRgb(a.cl);
-    doc.setFillColor(rgb.r,rgb.g,rgb.b,20);doc.rect(0,0,W,30,"F");doc.setFillColor(rgb.r,rgb.g,rgb.b);doc.rect(0,0,4,30,"F");
-    doc.setTextColor(rgb.r,rgb.g,rgb.b);doc.setFontSize(15);doc.setFont("helvetica","bold");doc.text(a.nm,m,13);
-    doc.setFontSize(8);doc.setFont("helvetica","normal");doc.setTextColor(150,140,120);doc.text(a.rl.toUpperCase(),m,22);
-    y=38;doc.setTextColor(40,36,28);doc.setFontSize(10);doc.setFont("helvetica","normal");
-    var content=override||RES[a.id]||"";
-    var lines=doc.splitTextToSize(content,lw);
-    lines.forEach(function(ln){cy(6);var isH=ln.trim().slice(-1)===":"&&ln.trim().length<60;if(isH){doc.setFont("helvetica","bold");doc.setTextColor(rgb.r,rgb.g,rgb.b);}else{doc.setFont("helvetica","normal");doc.setTextColor(40,36,28);}doc.text(ln,m,y);y+=5.5;});
-    doc.setFontSize(8);doc.setTextColor(180,170,150);doc.text((idx+1)+" / "+list.length+" - Charly's Agents",m,290);
-    if(idx<list.length-1)doc.addPage();
+Maak nu het geintegreerde actieplan." }] })
   });
-  doc.save(title.replace(/[^a-z0-9]/gi,"_").toLowerCase()+".pdf");
+  if (!resp.ok) { var err = {}; try { err = await resp.json(); } catch(x) {} throw new Error((err.error && err.error.message) || "HTTP " + resp.status); }
+  var d = await resp.json();
+  return (d.content || []).map(function(b) { return b.text || ""; }).join("") || "Geen synthese ontvangen.";
 }
 
-function rst(){
-  RES={};LS=new Set();IDEA="";
-  document.getElementById("ii").value="";
-  document.getElementById("synthbox").innerHTML="";
-  show("I");document.getElementById("hbadge").textContent="8 Specialisten";
-}
+async function go(synMode) {
+  if (!gK()) { show("S"); return; }
+  IDEA = document.getElementById("ii").value.trim();
+  RES = {}; LS = new Set(AG.map(function(a) { return a.id; }));
+  AID = AG[0].id; SYN_MODE = synMode; SYN_RESULT = "";
+  show("R");
+  document.getElementById("ir").textContent = IDEA || "Volledige projectanalyse - 10 woonarken 15x5m - Apeldoorns Kanaal";
+  document.getElementById("hbadge").textContent = "0 / 8 klaar";
+  rTabs(); rRes();
 
-// Restore last session if available
-try{
-  var last=JSON.parse(localStorage.getItem("ca_last")||"null");
-  if(last&&last.results&&Object.keys(last.results).length>0){
-    // Show restore button
-    var rb=document.createElement("div");
-    rb.style="margin-top:12px;padding:10px 14px;background:rgba(201,169,110,0.08);border:1px solid rgba(201,169,110,0.2);border-radius:12px;font-size:12px;color:rgba(240,235,224,0.6);cursor:pointer;";
-    rb.innerHTML="&#128197; Vorige sessie herstellen: <em>"+((last.idea||"Analyse")||"").slice(0,40)+"</em>";
-    rb.onclick=function(){RES=last.results;IDEA=last.idea||"";AID=AG[0].id;show("R");document.getElementById("ir").textContent=IDEA||"Vorige analyse";upP();rTabs();rRes();if(last.masterplan){window._masterplan=last.masterplan;document.getElementById("synthbox").innerHTML='<div class="synth-wrap"><h3>&#129504; Masterplan (opgeslagen)</h3><div class="synth-body">'+last.masterplan+'</div><button class="pb" style="margin:16px 0 0" onclick="synthPDF()">&#128196; Download PDF</button></div>';}};
-    document.getElementById("I").querySelector(".wrap").appendChild(rb);
+  for (var i = 0; i < AG.length; i++) {
+    var a = AG[i];
+    try { RES[a.id] = await callA(a, IDEA); }
+    catch(e) { RES[a.id] = "__E__" + e.message; }
+    LS.delete(a.id); upP(); rTabs();
+    if (AID === a.id) rRes();
   }
-}catch(e){}
 
-var dp=null;
-window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;setTimeout(function(){document.getElementById("ib").style.display="flex";},3000);});
-document.getElementById("ibt").addEventListener("click",function(){if(!dp)return;dp.prompt();dp.userChoice.then(function(){dp=null;document.getElementById("ib").style.display="none";});});
+  // After all agents done, run synthesis if requested
+  if (synMode) {
+    document.getElementById("hbadge").textContent = "Synthese...";
+    var synTab = document.querySelector(".syn-tab");
+    if (synTab) synTab.classList.add("ld");
+    try { SYN_RESULT = await callSynthesis(RES, IDEA); }
+    catch(e) { SYN_RESULT = "__E__Synthese fout: " + e.message; }
+    document.getElementById("hbadge").textContent = "Klaar";
+    rTabs();
+    AID = "__syn__"; rRes();
+  }
+}
 
-// INIT - synchronous, runs immediately
-show(gK()?"I":"S");
+function upP() {
+  var d = Object.keys(RES).length;
+  document.getElementById("pf").style.width = (d / AG.length * 100) + "%";
+  document.getElementById("pc").textContent = d + " / " + AG.length;
+  if (!SYN_MODE) document.getElementById("hbadge").textContent = d === AG.length ? "Klaar" : d + " / " + AG.length + " klaar";
+}
+
+function rTabs() {
+  var c = document.getElementById("tabs"); c.innerHTML = "";
+  AG.forEach(function(a) {
+    var isA = a.id === AID, isD = !!RES[a.id], isL = LS.has(a.id), isE = isD && RES[a.id].startsWith("__E__");
+    var t = document.createElement("button");
+    t.className = "tab" + (isA ? " on" : "") + (isD && !isE ? " dn" : "") + (isL ? " ld" : "");
+    if (isA) t.style.setProperty("--tc", a.cl);
+    t.innerHTML = '<span class="sd"></span>' + a.nm;
+    t.onclick = (function(id) { return function() { AID = id; rTabs(); rRes(); }; })(a.id);
+    c.appendChild(t);
+  });
+  // Synthesis tab
+  if (SYN_MODE) {
+    var st = document.createElement("button");
+    var synDone = !!SYN_RESULT;
+    var synLoading = Object.keys(RES).length === AG.length && !synDone;
+    st.className = "tab syn-tab" + (AID === "__syn__" ? " on" : "") + (synDone ? " dn" : "") + (synLoading ? " ld" : "");
+    st.innerHTML = '<span class="sd"></span>&#9881; Actieplan';
+    st.onclick = function() { AID = "__syn__"; rTabs(); rRes(); };
+    c.appendChild(st);
+  }
+}
+
+function rRes() {
+  var c = document.getElementById("res");
+  // Synthesis view
+  if (AID === "__syn__") {
+    if (!SYN_RESULT) {
+      c.innerHTML = '<div class="rc"><div class="syn-banner"><h3>&#9881; Synthese bezig...</h3><p>Alle 8 agents moeten eerst klaar zijn. Dan worden hun inzichten gecombineerd tot 1 geintegreerd actieplan.</p></div><div class="lst"><div class="sp" style="border-top-color:#2D6A4F"></div><div class="lt">Actieplan wordt samengesteld...</div></div></div>';
+    } else if (SYN_RESULT.startsWith("__E__")) {
+      c.innerHTML = '<div class="rc"><div class="es"><strong>Fout bij synthese:</strong><br><br>' + SYN_RESULT.replace("__E__","") + '</div></div>';
+    } else {
+      c.innerHTML = '<div class="rc"><div class="rch"><div class="rci" style="background:rgba(45,106,79,.2)">&#9881;&#65039;</div><div><div class="rcn" style="color:#4ade80">Geintegreerd Actieplan</div><div class="rcr">Synthese van alle 8 agents</div></div></div><div class="rcb">' + SYN_RESULT + '</div><button class="pb" onclick="synPDF()">&#128196; Download Actieplan PDF</button></div>';
+    }
+    return;
+  }
+
+  var a = AG.filter(function(x) { return x.id === AID; })[0];
+  if (!a) return;
+  if (LS.has(a.id)) {
+    c.innerHTML = '<div class="rc"><div class="lst"><div class="sp" style="border-top-color:' + a.cl + '"></div><div class="lt">' + a.nm + ' is aan het werk...</div></div></div>';
+    return;
+  }
+  if (!RES[a.id]) { c.innerHTML = '<div class="rc"><div class="ws">Wacht op andere agents...</div></div>'; return; }
+  if (RES[a.id].startsWith("__E__")) {
+    c.innerHTML = '<div class="rc"><div class="es"><strong>Fout bij ' + a.nm + ':</strong><br><br>' + RES[a.id].replace("__E__","") + '<br><br><small>Controleer je API key.</small></div></div>';
+    return;
+  }
+  c.innerHTML = '<div class="rc"><div class="rch"><div class="rci" style="background:' + a.bg + '">' + a.em + '</div><div><div class="rcn" style="color:' + a.cl + '">' + a.nm + '</div><div class="rcr">' + a.rl + '</div></div></div><div class="rcb">' + RES[a.id] + '</div><button class="pb" onclick="aPDF('' + a.id + '')">&#128196; PDF - ' + a.nm + '</button></div>';
+}
+
+// HISTORY
+function saveHist() {
+  var done = AG.filter(function(a) { return RES[a.id] && !RES[a.id].startsWith("__E__"); });
+  if (!done.length) { alert("Er zijn nog geen resultaten om op te slaan."); return; }
+  var hist = JSON.parse(localStorage.getItem("ca_hist") || "[]");
+  var entry = { id: Date.now(), idea: IDEA || "Volledige analyse", date: new Date().toLocaleDateString("nl-NL"), results: RES, synResult: SYN_RESULT, synMode: SYN_MODE };
+  hist.unshift(entry);
+  if (hist.length > 20) hist = hist.slice(0, 20);
+  localStorage.setItem("ca_hist", JSON.stringify(hist));
+  alert("Analyse opgeslagen!");
+}
+
+function loadHist(entry) {
+  RES = entry.results; IDEA = entry.idea; SYN_MODE = entry.synMode; SYN_RESULT = entry.synResult || "";
+  LS = new Set(); AID = AG[0].id;
+  document.getElementById("ir").textContent = IDEA;
+  document.getElementById("hbadge").textContent = "Klaar";
+  upP(); rTabs(); rRes();
+  show("R");
+}
+
+function delHist(id) {
+  var hist = JSON.parse(localStorage.getItem("ca_hist") || "[]");
+  localStorage.setItem("ca_hist", JSON.stringify(hist.filter(function(h) { return h.id !== id; })));
+  renderHist();
+}
+
+function renderHist() {
+  var hist = JSON.parse(localStorage.getItem("ca_hist") || "[]");
+  var c = document.getElementById("hlist");
+  if (!hist.length) { c.innerHTML = '<div class="hist-empty">Nog geen opgeslagen analyses.<br><br>Voer een analyse uit en klik op "Opslaan".</div>'; return; }
+  c.innerHTML = hist.map(function(h) {
+    var done = Object.keys(h.results || {}).filter(function(k) { return !h.results[k].startsWith("__E__"); }).length;
+    return '<div class="hist-item" onclick="loadHist(' + JSON.stringify(h).replace(/</g,"&lt;") + ')"><div class="hist-title">' + (h.idea || "Volledige analyse") + '</div><div class="hist-meta"><span>' + h.date + ' &middot; ' + done + '/8 agents' + (h.synMode ? ' &middot; met actieplan' : '') + '</span><button class="hist-del" onclick="event.stopPropagation();delHist(' + h.id + ')">Verwijderen</button></div></div>';
+  }).join("");
+}
+
+// PDF
+function hxRgb(h) { return { r: parseInt(h.slice(1,3),16), g: parseInt(h.slice(3,5),16), b: parseInt(h.slice(5,7),16) }; }
+
+function aPDF(id) {
+  var a = AG.filter(function(x) { return x.id === id; })[0];
+  if (!a || !RES[a.id] || RES[a.id].startsWith("__E__")) return;
+  mkPDF([{nm:a.nm,rl:a.rl,cl:a.cl,bg:a.bg,txt:RES[a.id]}], IDEA, a.nm + " - Charly's Agents");
+}
+function allPDF() {
+  var done = AG.filter(function(a) { return RES[a.id] && !RES[a.id].startsWith("__E__"); }).map(function(a) { return {nm:a.nm,rl:a.rl,cl:a.cl,bg:a.bg,txt:RES[a.id]}; });
+  if (SYN_RESULT && !SYN_RESULT.startsWith("__E__")) done.push({nm:"Geintegreerd Actieplan",rl:"Synthese van alle agents",cl:"#2D6A4F",bg:"rgba(45,106,79,.15)",txt:SYN_RESULT});
+  if (!done.length) { alert("Wacht tot agents klaar zijn."); return; }
+  mkPDF(done, IDEA, "Charly's Agents - Totaalrapport");
+}
+function synPDF() {
+  if (!SYN_RESULT || SYN_RESULT.startsWith("__E__")) return;
+  mkPDF([{nm:"Geintegreerd Actieplan",rl:"Synthese van alle 8 agents",cl:"#2D6A4F",bg:"rgba(45,106,79,.15)",txt:SYN_RESULT}], IDEA, "Actieplan - Charly's Agents");
+}
+
+function mkPDF(list, idea, title) {
+  if (!window.jspdf) { alert("PDF library laadt nog, probeer opnieuw."); return; }
+  var doc = new window.jspdf.jsPDF({ unit: "mm", format: "a4" });
+  var W = 210, m = 18, lw = W - m * 2, y = 0;
+  function ap() { doc.addPage(); y = m; }
+  function cy(n) { if (y + n > 280) ap(); }
+  doc.setFillColor(13,13,13); doc.rect(0,0,W,297,"F");
+  doc.setTextColor(201,169,110); doc.setFontSize(26); doc.setFont("helvetica","bold");
+  doc.text("Charly's Agents", m, 55);
+  doc.setFontSize(13); doc.setFont("helvetica","normal"); doc.setTextColor(240,235,224);
+  doc.text(title, m, 68);
+  if (idea) { doc.setFontSize(10); doc.setTextColor(180,170,150); doc.text(doc.splitTextToSize('"' + idea + '"', lw), m, 80); }
+  doc.setFontSize(9); doc.setTextColor(120,110,90);
+  doc.text(new Date().toLocaleDateString("nl-NL", {day:"numeric",month:"long",year:"numeric"}), m, 280);
+  doc.addPage();
+  list.forEach(function(a, idx) {
+    y = m;
+    var rgb = hxRgb(a.cl);
+    doc.setFillColor(rgb.r,rgb.g,rgb.b,20); doc.rect(0,0,W,30,"F");
+    doc.setFillColor(rgb.r,rgb.g,rgb.b); doc.rect(0,0,4,30,"F");
+    doc.setTextColor(rgb.r,rgb.g,rgb.b); doc.setFontSize(15); doc.setFont("helvetica","bold");
+    doc.text(a.nm, m, 13);
+    doc.setFontSize(8); doc.setFont("helvetica","normal"); doc.setTextColor(150,140,120);
+    doc.text(a.rl.toUpperCase(), m, 22); y = 38;
+    doc.setTextColor(40,36,28); doc.setFontSize(10); doc.setFont("helvetica","normal");
+    var lines = doc.splitTextToSize(a.txt || "", lw);
+    lines.forEach(function(ln) {
+      cy(6);
+      var isH = ln.trim().slice(-1) === ":" && ln.trim().length < 60;
+      if (isH) { doc.setFont("helvetica","bold"); doc.setTextColor(rgb.r,rgb.g,rgb.b); }
+      else { doc.setFont("helvetica","normal"); doc.setTextColor(40,36,28); }
+      doc.text(ln, m, y); y += 5.5;
+    });
+    doc.setFontSize(8); doc.setTextColor(180,170,150);
+    doc.text((idx+1) + " / " + list.length + " - Charly's Agents", m, 290);
+    if (idx < list.length - 1) doc.addPage();
+  });
+  doc.save(title.replace(/[^a-z0-9]/gi,"_").toLowerCase() + ".pdf");
+}
+
+// PWA
+var dp = null;
+window.addEventListener("beforeinstallprompt", function(e) {
+  e.preventDefault(); dp = e;
+  setTimeout(function() { document.getElementById("ib").style.display = "flex"; }, 3000);
+});
+document.getElementById("ibt").addEventListener("click", function() {
+  if (!dp) return; dp.prompt();
+  dp.userChoice.then(function() { dp = null; document.getElementById("ib").style.display = "none"; });
+});
+
+// INIT — runs immediately
+show(gK() ? "I" : "S");
 updK();
 </script>
 </body>
