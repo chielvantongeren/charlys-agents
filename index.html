@@ -176,5 +176,15 @@ show(gK()?"I":"S");
 updK();
 checkSaved();
 </script>
+<script>
+// Guaranteed init - runs after main script
+try {
+  if (typeof show === 'function') {
+    show(typeof gK === 'function' && gK() ? 'I' : 'S');
+    if (typeof updK === 'function') updK();
+    if (typeof checkSaved === 'function') checkSaved();
+  }
+} catch(e) { console.error('Init error:', e); }
+</script>
 </body>
 </html>
