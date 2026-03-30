@@ -354,9 +354,7 @@ function rst(){
 var dp=null;
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;setTimeout(function(){document.getElementById("ib").style.display="flex";},3000);});
 document.getElementById("ibt").addEventListener("click",function(){if(!dp)return;dp.prompt();dp.userChoice.then(function(){dp=null;document.getElementById("ib").style.display="none";});});
-show(gK()?"I":"S");
-updK();
-checkSaved();
+window.onload=function(){show(gK()?"I":"S");updK();checkSaved();};
 </script>
 </body>
 </html>
