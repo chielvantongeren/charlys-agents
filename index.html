@@ -2,408 +2,921 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Charly's Agents"/>
-<meta name="theme-color" content="#0d0d0d"/>
+<meta name="theme-color" content="#0b0b0c"/>
 <title>Charly's Agents</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-:root{--g:#C9A96E;--g2:#e8c98a;--g3:rgba(201,169,110,0.15);--bl:#0d0d0d;--su:rgba(255,255,255,0.04);--bo:rgba(255,255,255,0.08);--bg:rgba(201,169,110,0.3);--tx:#f0ebe0;--mu:rgba(240,235,224,0.45);--m2:rgba(240,235,224,0.2)}
+:root{
+  --bg:#0b0b0c;--card:#141416;--card2:#1c1c1f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);
+  --g:#D4B27A;--g2:#F0D59C;--gs:rgba(212,178,122,.12);--gl:rgba(212,178,122,.35);
+  --tx:#F3EEE4;--mu:rgba(243,238,228,.58);--m2:rgba(243,238,228,.32);
+  --ok:#5BD69A;--oks:rgba(91,214,154,.1);--er:#F06B6B;--ers:rgba(240,107,107,.1);--am:#F5B84D;--ams:rgba(245,184,77,.1);
+  --r:18px;--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);
+}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:var(--bl);color:var(--tx);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;top:-20%;left:-20%;width:60%;height:60%;background:radial-gradient(circle,rgba(201,169,110,0.08),transparent 70%);pointer-events:none;z-index:0;animation:d1 20s ease-in-out infinite}
-body::after{content:'';position:fixed;bottom:-10%;right:-10%;width:50%;height:50%;background:radial-gradient(circle,rgba(201,169,110,0.05),transparent 70%);pointer-events:none;z-index:0;animation:d2 25s ease-in-out infinite}
-@keyframes d1{0%,100%{transform:translate(0,0)}50%{transform:translate(5%,8%)}}
-@keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-5%,-6%)}}
-@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--tx);font-family:'Outfit',system-ui,sans-serif;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;top:-25%;right:-30%;width:90%;height:70%;background:radial-gradient(closest-side,rgba(212,178,122,.10),transparent);pointer-events:none;z-index:0}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{color:var(--g2)}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes sp{to{transform:rotate(360deg)}}
-@keyframes bl{0%,100%{opacity:.2}50%{opacity:1}}
-@keyframes su{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
-.hdr{position:sticky;top:0;z-index:100;padding:env(safe-area-inset-top,0) 20px 0;background:rgba(13,13,13,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--bo)}
-.hdr-i{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
-.logo{font-family:'Playfair Display',serif;font-size:19px;font-weight:700}
-.logo span{color:var(--g);font-style:italic}
-.badge{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--g);background:var(--g3);border:1px solid var(--bg);padding:4px 10px;border-radius:100px}
-.scr{display:none;position:relative;z-index:1}.scr.on{display:block}
-.wrap{padding:28px 18px;padding-bottom:calc(28px + env(safe-area-inset-bottom,0))}
-.hero{margin-bottom:24px;animation:up .5s ease both}
-.hlb{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--g);margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.hlb::before{content:'';display:block;width:20px;height:1px;background:var(--g)}
-.hero h1{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;line-height:1.15;margin-bottom:8px}
-.hero h1 em{color:var(--g);font-style:italic;display:block}
-.hero p{font-size:13px;color:var(--mu);line-height:1.6;font-weight:300}
-.scard{background:var(--su);border:1px solid var(--bg);border-radius:16px;padding:20px;margin-bottom:20px}
-.scard h3{font-family:'Playfair Display',serif;font-size:16px;color:var(--g);margin-bottom:6px}
-.scard p{font-size:12px;color:var(--mu);line-height:1.6;margin-bottom:14px}
-input[type=password]{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--bg);border-radius:12px;padding:14px 16px;font-size:14px;font-family:'Outfit',sans-serif;color:var(--tx);outline:none;margin-bottom:10px}
-input[type=password]::placeholder{color:var(--m2)}
-.kerr{color:#ef4444;font-size:11px;margin-bottom:10px;display:none}
-textarea{width:100%;min-height:100px;background:var(--su);border:1px solid var(--bo);border-radius:14px;padding:14px 16px;font-size:14px;font-family:'Outfit',sans-serif;font-weight:300;color:var(--tx);resize:none;outline:none;line-height:1.6;margin-bottom:10px}
-textarea::placeholder{color:var(--m2)}
-textarea:focus{border-color:var(--bg);box-shadow:0 0 0 3px rgba(201,169,110,.06)}
-.ctx{display:flex;align-items:flex-start;gap:9px;padding:10px 14px;background:rgba(45,106,79,.08);border:1px solid rgba(45,106,79,.2);border-radius:12px;font-size:11px;color:rgba(240,235,224,.5);line-height:1.6;margin-bottom:16px}
-.cdot{width:7px;height:7px;border-radius:50%;background:#2D6A4F;flex-shrink:0;margin-top:3px}
-.ctx strong{color:#3d9970}
-.svbar{display:none;align-items:center;gap:8px;padding:8px 14px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:10px;font-size:11px;color:rgba(74,222,128,.8);margin-bottom:16px}
-.svbar.on{display:flex}
-.svbtn{background:none;border:none;color:#4ade80;font-size:11px;cursor:pointer;font-family:'Outfit',sans-serif;text-decoration:underline;margin-left:4px}
-.sdot2{width:6px;height:6px;border-radius:50%;background:#4ade80;flex-shrink:0}
-.albl{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:8px}
-.agrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:16px}
-.acard{background:var(--su);border:1px solid var(--bo);border-radius:13px;padding:12px;display:flex;align-items:center;gap:9px}
-.aico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700}
-.anm{font-size:11px;font-weight:500;line-height:1.2}
-.arl{font-size:10px;color:var(--mu);margin-top:2px;font-weight:300}
-.cta{width:100%;background:linear-gradient(135deg,var(--g),var(--g2));color:#0d0d0d;border:none;border-radius:14px;padding:16px;font-size:12px;font-family:'Outfit',sans-serif;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 18px rgba(201,169,110,.25);position:relative;overflow:hidden;transition:transform .15s;margin-bottom:8px;display:block;text-align:center}
-.cta::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 55%);pointer-events:none}
-.cta:active{transform:scale(.98)}
-.cta.grn{background:linear-gradient(135deg,#2D6A4F,#3d9970);box-shadow:0 4px 18px rgba(45,106,79,.3)}
-.kstat{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--mu);margin-top:4px;cursor:pointer;padding:6px 0}
-.kd{width:6px;height:6px;border-radius:50%;background:#4ade80}.kd.off{background:#ef4444}
-.rtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
-.rtl{font-family:'Playfair Display',serif;font-size:20px;font-weight:700}
-.brow{display:flex;gap:6px;flex-wrap:wrap}
-.rb{font-size:11px;font-weight:500;color:var(--g);background:var(--g3);border:1px solid var(--bg);border-radius:100px;padding:6px 12px;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap}
-.rb.dk{background:var(--su);color:var(--mu);border-color:var(--bo)}
-.rb.gn{background:rgba(45,106,79,.15);color:#3d9970;border-color:rgba(45,106,79,.3)}
-.irec{background:var(--su);border-left:3px solid var(--g);border-radius:0 10px 10px 0;padding:10px 14px;font-size:12px;color:var(--mu);font-style:italic;line-height:1.5;margin-bottom:14px}
-.pw{margin-bottom:16px}
-.ph{display:flex;justify-content:space-between;margin-bottom:6px}
-.pl{font-size:11px;color:var(--mu);font-weight:300}
-.pc{font-size:11px;color:var(--g);font-weight:600}
-.pt{height:2px;background:var(--bo);border-radius:2px;overflow:hidden}
-.pf{height:100%;background:linear-gradient(90deg,var(--g),var(--g2));border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1)}
-.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:12px;margin-bottom:12px;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:7px 12px;background:var(--su);border:1px solid var(--bo);border-radius:100px;font-size:11px;font-family:'Outfit',sans-serif;color:var(--mu);cursor:pointer;white-space:nowrap;transition:all .2s}
-.tab.on{background:var(--tc,var(--g));border-color:var(--tc,var(--g));color:#fff;font-weight:600}
-.sd{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.4}
-.tab.dn .sd{opacity:1;background:#4ade80}
-.tab.ld .sd{animation:bl 1s ease-in-out infinite}
-.rc{background:var(--su);border:1px solid var(--bo);border-radius:16px;overflow:hidden}
-.rch{padding:16px 16px 12px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:12px}
-.rci{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;font-weight:700}
-.rcn{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;line-height:1.2}
-.rcr{font-size:10px;color:var(--mu);font-weight:300;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
-.rcb{padding:16px;font-size:13px;line-height:1.85;color:rgba(240,235,224,.8);white-space:pre-wrap;font-weight:300}
-.pb{margin:0 16px 16px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--g);background:var(--g3);border:1px solid var(--bg);border-radius:100px;padding:7px 14px;cursor:pointer;font-family:'Outfit',sans-serif;width:fit-content}
-.synbox{background:rgba(45,106,79,.08);border:1px solid rgba(45,106,79,.25);border-radius:14px;padding:16px;margin-bottom:16px}
-.synbox h4{font-family:'Playfair Display',serif;font-size:15px;color:#3d9970;margin-bottom:4px}
-.synsub{font-size:12px;color:var(--mu);line-height:1.5;margin-bottom:8px}
-.synres{font-size:13px;line-height:1.85;color:rgba(240,235,224,.85);white-space:pre-wrap;font-weight:300;padding-top:10px;border-top:1px solid rgba(45,106,79,.2);margin-top:8px}
-.lst{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 20px;gap:12px}
-.sp{width:34px;height:34px;border-radius:50%;border:2px solid var(--bo);border-top-color:var(--g);animation:sp .9s linear infinite}
-.spg{border-top-color:#3d9970}
-.lt{font-size:12px;color:var(--mu);font-weight:300}
-.ws{display:flex;align-items:center;justify-content:center;padding:40px 20px;font-size:12px;color:var(--m2);text-align:center}
-.es{padding:16px;font-size:13px;color:#ef4444;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:12px;margin:8px}
-.ib{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0));left:14px;right:14px;background:rgba(16,16,16,.96);backdrop-filter:blur(20px);border:1px solid var(--bg);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:10px;z-index:200;box-shadow:0 14px 36px rgba(0,0,0,.6);animation:su .4s cubic-bezier(.4,0,.2,1)}
-.ii{font-size:24px;flex-shrink:0}.it{flex:1}
-.it strong{font-size:13px;font-weight:600;display:block}
-.it span{font-size:11px;color:var(--mu)}
-.ibtn{background:linear-gradient(135deg,var(--g),var(--g2));color:#0d0d0d;border:none;border-radius:100px;padding:8px 14px;font-size:11px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer}
-.ic{background:transparent;border:none;color:var(--mu);font-size:18px;cursor:pointer;flex-shrink:0}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,178,122,.5)}50%{box-shadow:0 0 0 7px rgba(212,178,122,0)}}
+@keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+.top{position:sticky;top:0;z-index:50;padding:calc(var(--sat) + 10px) 16px 10px;background:rgba(11,11,12,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.top-i{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:10px;min-height:36px}
+.logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;letter-spacing:-.2px}
+.logo em{color:var(--g);font-style:italic;font-weight:600}
+.ttl{flex:1;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);flex-shrink:0}
+.ib svg{width:18px;height:18px;stroke:var(--tx);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+main{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:18px 16px calc(110px + var(--sab))}
+.view{animation:up .35s ease both}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--g);margin-bottom:8px}
+h1{font-family:'Playfair Display',serif;font-size:32px;line-height:1.1;font-weight:700;letter-spacing:-.4px;margin-bottom:8px}
+h1 em{color:var(--g);font-style:italic;font-weight:600}
+h2{font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--mu);margin:28px 0 12px;display:flex;align-items:center;justify-content:space-between}
+h2 .cnt{font-size:11px;color:var(--m2);letter-spacing:1px}
+.lead{font-size:14px;color:var(--mu);line-height:1.55;font-weight:300}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.card+.card{margin-top:10px}
+.tap{cursor:pointer;transition:transform .12s,border-color .2s}
+.tap:active{transform:scale(.985)}
+.tap:hover{border-color:var(--line2)}
+.gold{border-color:var(--gl);background:linear-gradient(180deg,rgba(212,178,122,.08),rgba(212,178,122,.02) 60%),var(--card)}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.grow{flex:1;min-width:0}
+.t1{font-size:15px;font-weight:500;line-height:1.35}
+.t2{font-size:12px;color:var(--mu);margin-top:3px;line-height:1.45}
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 20px;border-radius:14px;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--g),var(--g2));color:#16120b;box-shadow:0 6px 20px rgba(212,178,122,.22);transition:transform .12s,opacity .2s}
+.b:active{transform:scale(.97)}
+.b:disabled{opacity:.35;pointer-events:none}
+.b.full{width:100%}
+.b2{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:44px;padding:0 16px;border-radius:13px;font-size:13px;font-weight:500;background:var(--card2);border:1px solid var(--line2);color:var(--tx);transition:transform .12s}
+.b2:active{transform:scale(.97)}
+.b2:disabled{opacity:.35;pointer-events:none}
+.b2.sm{height:34px;padding:0 12px;font-size:12px;border-radius:10px}
+.b2.ok{color:var(--ok);border-color:rgba(91,214,154,.35);background:var(--oks)}
+.b2.er{color:var(--er);border-color:rgba(240,107,107,.35);background:var(--ers)}
+.b2.gd{color:var(--g2);border-color:var(--gl);background:var(--gs)}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns.two>*{flex:1}
+.lnk{font-size:12px;color:var(--mu);text-decoration:underline;text-underline-offset:3px;padding:8px 0}
+textarea,input[type=text],input[type=password]{width:100%;background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:13px 14px;font-size:16px;font-family:inherit;font-weight:300;color:var(--tx);outline:none;line-height:1.5;transition:border-color .2s}
+textarea{resize:vertical;min-height:88px}
+textarea:focus,input:focus{border-color:var(--gl)}
+::placeholder{color:var(--m2)}
+label.l{display:block;font-size:12px;color:var(--mu);margin:16px 0 7px;font-weight:500}
+label.l span{color:var(--m2);font-weight:300}
+.cap{padding:6px;border-radius:22px;background:var(--card);border:1px solid var(--gl);box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.cap textarea{background:transparent;border:none;min-height:110px;font-size:17px;padding:14px}
+.cap .btns{padding:6px;flex-wrap:nowrap}
+.cap .b2{white-space:nowrap;padding:0 10px}
+.mic{width:44px;height:44px;border-radius:13px;background:var(--card2);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;flex:0 0 44px!important}
+.mic svg{width:18px;height:18px;stroke:var(--tx);fill:none;stroke-width:2}
+.mic.on{background:var(--ers);border-color:var(--er)}
+.mic.on svg{stroke:var(--er)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:4px 9px;border-radius:100px;background:var(--card2);border:1px solid var(--line);color:var(--mu);white-space:nowrap}
+.pill.ok{color:var(--ok);background:var(--oks);border-color:rgba(91,214,154,.25)}
+.pill.er{color:var(--er);background:var(--ers);border-color:rgba(240,107,107,.25)}
+.pill.am{color:var(--am);background:var(--ams);border-color:rgba(245,184,77,.25)}
+.pill.gd{color:var(--g2);background:var(--gs);border-color:var(--gl)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 10px;text-align:left;cursor:pointer}
+.stat b{display:block;font-size:24px;font-weight:600;font-family:'Playfair Display',serif}
+.stat span{font-size:11px;color:var(--mu)}
+.stat.hi b{color:var(--g)}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px;margin-bottom:14px}
+.seg button{flex:1;height:36px;border-radius:10px;font-size:12px;font-weight:500;color:var(--mu)}
+.seg button.on{background:var(--card2);color:var(--tx);box-shadow:0 1px 0 var(--line2) inset}
+.seg button i{font-style:normal;color:var(--m2);margin-left:4px}
+.att{display:flex;gap:12px;align-items:center}
+.att .ic{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.steps{display:flex;align-items:flex-start;margin:6px 0 22px}
+.st{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;font-size:10px;color:var(--m2);font-weight:500;letter-spacing:.3px}
+.st::before{content:'';position:absolute;top:11px;left:-50%;width:100%;height:2px;background:var(--line2);z-index:0}
+.st:first-child::before{display:none}
+.st i{width:24px;height:24px;border-radius:50%;background:var(--bg);border:2px solid var(--line2);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:11px;z-index:1;color:var(--m2)}
+.st.done{color:var(--mu)}
+.st.done i{background:var(--g);border-color:var(--g);color:#16120b}
+.st.done::before,.st.cur::before{background:var(--g)}
+.st.cur{color:var(--g2)}
+.st.cur i{border-color:var(--g);color:var(--g);animation:pulse 2s infinite}
+.st.kill i{background:var(--er);border-color:var(--er);color:#fff}
+.av{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;position:relative}
+.av.sm{width:32px;height:32px;border-radius:10px;font-size:15px}
+.av .s{position:absolute;right:-3px;bottom:-3px;width:12px;height:12px;border-radius:50%;border:2px solid var(--card);background:var(--m2)}
+.av .s.done{background:var(--ok)}.av .s.err{background:var(--er)}.av .s.run{background:var(--g);animation:pulse 1.4s infinite}
+.pick{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none;margin:0 -2px}
+.pick::-webkit-scrollbar{display:none}
+.pk{flex:0 0 auto;width:84px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-size:10.5px;text-align:center;line-height:1.2;color:var(--m2);transition:all .2s}
+.pk .av{opacity:.35;filter:grayscale(1);transition:all .2s}
+.pk.on{border-color:var(--gl);color:var(--tx);background:var(--gs)}
+.pk.on .av{opacity:1;filter:none}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.grid .card+.card{margin-top:0}
+.ag{padding:12px;display:flex;gap:10px;align-items:center}
+.ag .n{font-size:13px;font-weight:600;line-height:1.2}
+.ag .r{font-size:11px;color:var(--mu);margin-top:2px}
+.tl{display:flex;margin:16px 0 18px}
+.tn{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;position:relative;font-size:10px;color:var(--m2);text-align:center}
+.tn::before{content:'';position:absolute;top:8px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.tn:first-child::before{display:none}
+.tn i{width:18px;height:18px;border-radius:50%;border:2px solid var(--line2);background:var(--bg);z-index:1}
+.tn.done{color:var(--mu)}.tn.done i{background:var(--g);border-color:var(--g)}.tn.done::before,.tn.run::before{background:var(--g)}
+.tn.run{color:var(--g2)}.tn.run i{border-color:var(--g);animation:pulse 1.4s infinite;background:rgba(212,178,122,.3)}
+.tn.err i{background:var(--er);border-color:var(--er)}
+.tn.skip{opacity:.35}.tn.skip i{border-style:dashed}
+.dec{border-radius:22px;padding:0;overflow:hidden}
+.dech{display:flex;align-items:center;gap:12px;padding:16px 16px 12px;border-bottom:1px solid var(--line)}
+.skel{height:12px;border-radius:6px;margin:10px 0;background:linear-gradient(90deg,var(--card2) 0,rgba(255,255,255,.06) 50%,var(--card2) 100%);background-size:400px 100%;animation:shimmer 1.4s infinite linear}
+.md{font-size:14.5px;line-height:1.7;color:rgba(243,238,228,.86);font-weight:300;overflow-wrap:anywhere;padding:16px}
+.md h1,.md h2,.md h3,.md h4{font-family:'Playfair Display',serif;color:var(--g);margin:20px 0 6px;line-height:1.3;letter-spacing:0;text-transform:none;display:block}
+.md h2{font-size:18px}.md h3{font-size:16px}.md h4{font-size:15px}
+.md>*:first-child{margin-top:0}
+.md p{margin:0 0 10px}
+.md ul,.md ol{margin:0 0 12px 20px}.md li{margin-bottom:5px}
+.md strong{color:var(--tx);font-weight:600}
+.md code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:5px;font-size:12.5px}
+.md table{border-collapse:collapse;width:100%;margin:6px 0 12px;font-size:12.5px;display:block;overflow-x:auto}
+.md td,.md th{border:1px solid var(--line2);padding:7px 9px;text-align:left;vertical-align:top}
+.md th{color:var(--g);font-weight:500}
+.md hr{border:none;border-top:1px solid var(--line2);margin:16px 0}
+.md .rep{margin-top:16px;padding:14px;border-radius:14px;background:var(--card2);border-left:3px solid var(--g)}
+.ban{border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.5;display:flex;gap:10px;align-items:flex-start}
+.ban.am{background:var(--ams);color:var(--am);border:1px solid rgba(245,184,77,.25)}
+.ban.ok{background:var(--oks);color:var(--ok);border:1px solid rgba(91,214,154,.25)}
+.ban.er{background:var(--ers);color:var(--er);border:1px solid rgba(240,107,107,.25)}
+.ban.mu{background:var(--card2);color:var(--mu);border:1px solid var(--line)}
+details.card{padding:0}
+details.card>summary{list-style:none;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::after{content:'';width:8px;height:8px;border-right:2px solid var(--mu);border-bottom:2px solid var(--mu);transform:rotate(45deg);margin-left:auto;transition:transform .2s;flex-shrink:0}
+details.card[open]>summary::after{transform:rotate(-135deg)}
+details.card[open]>summary{border-bottom:1px solid var(--line)}
+.dos{font-size:13.5px;color:var(--mu);white-space:pre-wrap;line-height:1.6;padding:14px 16px}
+.load{display:flex;flex-direction:column;align-items:center;gap:12px;padding:36px 16px;color:var(--mu);font-size:13px}
+.sp{width:30px;height:30px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--g);animation:sp .8s linear infinite}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:60;padding:8px 12px calc(8px + var(--sab));background:rgba(14,14,15,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--line)}
+.tabbar-i{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:center}
+.tb{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--m2);padding:4px 0;font-weight:500}
+.tb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tb.on{color:var(--g2)}
+.fab{justify-self:center;width:54px;height:54px;border-radius:18px;background:linear-gradient(135deg,var(--g),var(--g2));display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(212,178,122,.35);margin-top:-22px}
+.fab svg{width:24px;height:24px;stroke:#16120b;stroke-width:2.5;fill:none;stroke-linecap:round}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;display:none;animation:fade .2s}
+.ov.on{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:100;max-height:90vh;display:none;flex-direction:column;background:#121214;border-top:1px solid var(--line2);border-radius:24px 24px 0 0;animation:sheet .28s cubic-bezier(.2,.8,.2,1);max-width:720px;margin:0 auto}
+.sheet.on{display:flex}
+.sh-h{padding:10px 16px 12px;border-bottom:1px solid var(--line)}
+.grab{width:40px;height:4px;border-radius:4px;background:var(--line2);margin:0 auto 12px}
+.sh-b{overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1}
+.sh-f{padding:12px 16px calc(12px + var(--sab));border-top:1px solid var(--line)}
+.sh-f:empty{display:none}
+.toast{position:fixed;left:50%;bottom:calc(96px + var(--sab));transform:translateX(-50%);background:#202023;border:1px solid var(--gl);color:var(--tx);padding:10px 16px;border-radius:100px;font-size:13px;z-index:200;display:none;white-space:nowrap}
+.empty{font-size:13px;color:var(--m2);padding:14px 2px;line-height:1.5}
+.sw{position:relative;width:48px;height:28px;flex-shrink:0}
+.sw input{opacity:0;width:0;height:0}
+.sw span{position:absolute;inset:0;background:var(--line2);border-radius:28px;cursor:pointer;transition:.2s}
+.sw span::before{content:'';position:absolute;width:22px;height:22px;left:3px;top:3px;background:var(--tx);border-radius:50%;transition:.2s}
+.sw input:checked+span{background:var(--g)}
+.sw input:checked+span::before{transform:translateX(20px)}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt24{margin-top:24px}
 </style>
 </head>
 <body>
-<div class="hdr"><div class="hdr-i"><div class="logo">Charly's <span>Agents</span></div><div class="badge" id="hbadge">8 Specialisten</div></div></div>
 
-<div class="scr" id="S"><div class="wrap">
-  <div class="hero"><div class="hlb">Eenmalige instelling</div><h1>API Key<br><em>Instellen.</em></h1><p>Voer je Anthropic API key in. Veilig opgeslagen op jouw apparaat.</p></div>
-  <div class="scard"><h3>Waar vind je je key?</h3><p>Ga naar <strong>console.anthropic.com</strong> - API Keys - Create new key.</p>
-  <input type="password" id="ki" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false"/>
-  <div class="kerr" id="ke">Voer een geldige key in (begint met sk-ant-)</div>
-  <button class="cta" onclick="saveK()">Opslaan en starten</button></div>
-</div></div>
+<div class="top"><div class="top-i" id="top"></div></div>
+<main id="app"></main>
 
-<div class="scr" id="I"><div class="wrap">
-  <div class="hero"><div class="hlb">Jouw persoonlijk team</div><h1>Jouw idee.<br><em>Hun expertise.</em></h1><p>Projectkader ingeladen. Voeg een vraag toe of druk direct op start.</p></div>
-  <textarea id="ii" placeholder="Bijv. 'Wat is de beste juridische structuur?' of laat leeg voor volledige analyse."></textarea>
-  <div class="ctx"><div class="cdot"></div><div><strong>Ingeladen:</strong> 10 off-grid woonarken (15x5m) - Apeldoorns Kanaal - Verhuur en verkoop - Waterschap positief - Vergunning mei 2026 - Molly VR - 400k - Ruim budget</div></div>
-  <div class="svbar" id="svbar"><div class="sdot2"></div><span id="svtxt">Vorige analyse beschikbaar</span><button class="svbtn" onclick="loadSaved()">Laad op</button></div>
-  <div class="albl">Jouw team</div>
-  <div class="agrid" id="ag"></div>
-  <button class="cta" onclick="go()">Zet mijn team aan het werk</button>
-  <button class="cta grn" onclick="goSyn()">Laat agents samenwerken - maak actieplan</button>
-  <div class="kstat" onclick="resetK()"><div class="kd" id="kd"></div><span id="kl">API key actief</span></div>
-</div></div>
+<nav class="tabbar"><div class="tabbar-i">
+  <button class="tb" data-t="home" onclick="go('#/')"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+  <button class="tb" data-t="pipe" onclick="go('#/pijplijn')"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h6"/></svg>Pijplijn</button>
+  <button class="fab" onclick="quickIdea()" aria-label="Nieuw idee"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+  <button class="tb" data-t="runs" onclick="go('#/analyses')"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Analyses</button>
+  <button class="tb" data-t="set" onclick="go('#/instellingen')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Instellingen</button>
+</div></nav>
 
-<div class="scr" id="R"><div class="wrap">
-  <div class="rtop"><div class="rtl">Analyse</div><div class="brow">
-    <button class="rb gn" onclick="goSyn()">Samenwerken</button>
-    <button class="rb" onclick="allPDF()">PDF</button>
-    <button class="rb dk" onclick="rst()">Nieuw</button>
-  </div></div>
-  <div class="irec" id="ir"></div>
-  <div id="synbox"></div>
-  <div class="pw"><div class="ph"><div class="pl">Voortgang team</div><div class="pc" id="pc">0 / 8</div></div><div class="pt"><div class="pf" id="pf" style="width:0%"></div></div></div>
-  <div class="tabs" id="tabs"></div>
-  <div id="res"></div>
-</div></div>
-
-<div class="ib" id="ib" style="display:none">
-  <div class="ii">&#128241;</div><div class="it"><strong>Installeer als app</strong><span>Altijd bij de hand</span></div>
-  <button class="ibtn" id="ibt">Installeer</button>
-  <button class="ic" onclick="document.getElementById('ib').style.display='none'">x</button>
-</div>
+<div class="ov" id="ov" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet"><div class="sh-h"><div class="grab"></div><div id="sh-h"></div></div><div class="sh-b" id="sh-b"></div><div class="sh-f" id="sh-f"></div></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)"/>
 
 <script>
-var PC = "Je werkt voor Chiel van Tongeren (Charly) uit Apeldoorn. PROJECT: 10 off-grid woonarken 15x5 meter op het Apeldoorns Kanaal. EXPLOITATIE: verhuur en verkoop. WATERSCHAP: Vallei Veluwe positief, vergunning gemeente Apeldoorn verwacht mei 2026. VISUALISATIE: Molly VR Bratislava 3D renders verkoop op tekening. PRIJS: 400000 euro per woonark, off-grid kosten in prijs. BUDGET: ruim. ROL: initiatiefnemer geen ontwikkelaar zoekt partners. Schrijf ALTIJD in het Nederlands. Wees concreet en praktisch.";
-
-var AG = [
-  {id:"st",nm:"De Strateeg",ltr:"S",cl:"#2D6A4F",bg:"rgba(45,106,79,.15)",rl:"Roadmap & fasering",sy:"Je bent De Strateeg. "+PC+" Maak concrete roadmap met fases tot eerste verhuur/verkoop."},
-  {id:"pm",nm:"De Projectmanager",ltr:"P",cl:"#4A90D9",bg:"rgba(74,144,217,.15)",rl:"Planning & bewaking",sy:"Je bent De Projectmanager. "+PC+" Maak projectstructuur met taken, mijlpalen en risicos."},
-  {id:"co",nm:"De Communicator",ltr:"C",cl:"#C9A96E",bg:"rgba(201,169,110,.15)",rl:"Verhaal & marketing",sy:"Je bent De Communicator. "+PC+" Schrijf krachtige pitch en marketingaanpak voor kopers en huurders."},
-  {id:"ma",nm:"De Marktanalist",ltr:"M",cl:"#E05C8A",bg:"rgba(224,92,138,.15)",rl:"Doelgroep & positionering",sy:"Je bent De Marktanalist. "+PC+" Analyseer ideale kopers en huurders: motivaties, leefstijl, inkomen, positionering."},
-  {id:"re",nm:"De Researcher",ltr:"R",cl:"#9B59B6",bg:"rgba(155,89,182,.15)",rl:"Regelgeving & vergunningen",sy:"Je bent De Researcher. "+PC+" Volledig overzicht wet- en regelgeving, vergunningen, subsidies."},
-  {id:"an",nm:"De Analist",ltr:"A",cl:"#E67E22",bg:"rgba(230,126,34,.15)",rl:"Financien & haalbaarheid",sy:"Je bent De Analist. "+PC+" Financiele haalbaarheidsanalyse verhuur en verkoop scenario."},
-  {id:"bo",nm:"De Ontwikkelaar",ltr:"O",cl:"#27AE60",bg:"rgba(39,174,96,.15)",rl:"Bouw & techniek",sy:"Je bent De Ontwikkelaar. "+PC+" Bouwkundig advies 15x5m woonark: specs, off-grid systemen, scheepswerven."},
-  {id:"ju",nm:"De Jurist",ltr:"J",cl:"#2E86AB",bg:"rgba(46,134,171,.15)",rl:"Juridisch & contracten",sy:"Je bent De Jurist. "+PC+" Juridisch advies: rechtsvorm, waterrecht, veilige verkoop op tekening, contracten."}
+/* ================= AGENTS ================= */
+var AGENTS = [
+  {id:"re",nm:"De Researcher",em:"\u{1F50D}",cl:"#9B59B6",rl:"Regels & feiten",web:true,task:"Zoek de relevante wet- en regelgeving, vergunningen, subsidies en vergelijkbare projecten of precedenten. Alleen feiten die je kunt onderbouwen; noem bij elke claim de bron."},
+  {id:"st",nm:"De Strateeg",em:"\u{1F9E0}",cl:"#3E9B72",rl:"Route & keuzes",web:false,task:"Bepaal de beste route naar het doel. Geef fases, de kritische beslismomenten en wat Chiel juist NIET moet doen. Benoem de belangrijkste strategische keuze die nu openstaat."},
+  {id:"pm",nm:"De Projectmanager",em:"\u{1F4CB}",cl:"#4A90D9",rl:"Planning & acties",web:false,task:"Maak een werkstructuur: taken, mijlpalen, wie wat doet (Chiel zelf of welk type partner), afhankelijkheden en risico's. Eindig met een concrete actielijst voor de komende 14 dagen."},
+  {id:"co",nm:"De Communicator",em:"\u270F\uFE0F",cl:"#C9A96E",rl:"Verhaal & pitch",web:false,task:"Schrijf de kernboodschap (1 zin), een pitch van max. een halve A4 en per doelgroep de belangrijkste boodschap en het beste kanaal. Toon: authentiek en ingetogen, geen marketingpraat of superlatieven."},
+  {id:"ma",nm:"De Marktanalist",em:"\u{1F3AF}",cl:"#E05C8A",rl:"Doelgroep & markt",web:true,task:"Analyseer de doelgroepen (wie, waarom, wat ze kunnen en willen betalen), concurrenten en alternatieven, en de positionering. Gebruik echte marktdata waar mogelijk en zeg het als je die niet hebt."},
+  {id:"an",nm:"De Analist",em:"\u{1F522}",cl:"#E67E22",rl:"Geld & haalbaarheid",web:true,task:"Maak een financiele haalbaarheidsanalyse met drie scenario's (voorzichtig / verwacht / goed). Zet elke aanname expliciet neer met onderbouwing. Bepaal het break-evenpunt en welke aanname het resultaat het meest bepaalt."},
+  {id:"mk",nm:"De Maker",em:"\u{1F6E0}\uFE0F",cl:"#27AE60",rl:"Uitvoering & techniek",web:true,task:"Hoe wordt dit concreet gerealiseerd? Techniek, benodigde leveranciers en partners (met concrete namen in Nederland waar mogelijk), doorlooptijden en de grootste kostenposten."},
+  {id:"ju",nm:"De Jurist",em:"\u2696\uFE0F",cl:"#2E86AB",rl:"Juridisch & contracten",web:true,task:"Rechtsvorm, contracten, aansprakelijkheid en juridische risico's. Wat moet op papier staan voordat er geld of handtekeningen bij komen? Zeg expliciet wanneer een gespecialiseerde advocaat of notaris nodig is."},
+  {id:"dv",nm:"Advocaat v/d Duivel",em:"\u{1F608}",cl:"#D9534F",rl:"Zwakke plekken",web:false,task:"Zoek actief naar denkfouten, blinde vlekken, te optimistische aannames en de meest waarschijnlijke redenen waarom dit mislukt. Wees direct en confronterend, niet negatief om het negatief zijn. Eindig met de 3 vragen die Chiel eerst moet beantwoorden."}
 ];
+var REG = {id:"rg",nm:"De Regisseur",em:"\u{1F3AC}",cl:"#D4B27A",rl:"Besluit & acties"};
+var VERKENNER={nm:"De Verkenner",em:"\u2728",cl:"#D4B27A",rl:"Groot denken"};
+var ONTLEDER={nm:"De Ontleder",em:"\u{1F52A}",cl:"#8FA3B0",rl:"Koel uit elkaar halen"};
+function agentById(id){ if(id==="rg") return REG; for(var i=0;i<AGENTS.length;i++) if(AGENTS[i].id===id) return AGENTS[i]; return null; }
+function avatar(a, st, sm){ return '<div class="av'+(sm?' sm':'')+'" style="background:'+a.cl+'22">'+a.em+(st?'<span class="s '+st+'"></span>':'')+'</div>'; }
 
-var RES = {}, LS = new Set(), AID = "st", IDEA = "", SYNRES = "";
+/* ================= STORAGE ================= */
+var DBKEY="ca_db_v2";
+function lsGet(k,d){ try{ var v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+var DB;
+function loadDB(){
+  try{ DB=JSON.parse(lsGet(DBKEY,"null")); }catch(e){ DB=null; }
+  if(!DB||!DB.projects){ DB={projects:[seedProject()],runs:[],ideas:[]}; save(); }
+  if(!DB.ideas) DB.ideas=[];
+  DB.projects.forEach(function(p){ if(p.assumptions==null) p.assumptions=""; });
+}
+function save(){ if(!lsSet(DBKEY,JSON.stringify(DB))) toast("Opslaan mislukt: geheugen vol? Maak een back-up."); }
+function seedProject(){
+  return {id:uid(),name:"Woonarken Apeldoorns Kanaal",desc:"10 off-grid woonarken (15x5 m) op het Apeldoorns Kanaal voor verhuur en verkoop.",
+    ctx:"Locatie: Apeldoorns Kanaal.\nProduct: 10 off-grid woonarken van 15 x 5 meter.\nExploitatie: verhuur en verkoop.\nBeoogde prijs: 400.000 euro per woonark, off-grid voorzieningen inbegrepen.\nVisualisatie: 3D/VR-renders door Molly VR (Bratislava) voor verkoop op tekening.\nWaterschap Vallei en Veluwe heeft positief gereageerd (vorm: nog vastleggen - mondeling of schriftelijk?).\nRol Chiel: initiatiefnemer, geen ontwikkelaar; zoekt partners.\nBudget: nog in bedragen invullen.",
+    assumptions:"1. Er zijn genoeg kopers/huurders voor een woonark van 400.000 euro op deze locatie.\n2. De gemeente verleent de vergunning.\n3. Er zijn partners te vinden die bouw en financiering oppakken.\n4. Off-grid is technisch en financieel haalbaar binnen de prijs.",
+    status:"LET OP: bijwerken. Laatst bekend: vergunning van gemeente Apeldoorn werd verwacht in mei 2026.",
+    updated:"2026-05-01T00:00:00.000Z",created:new Date().toISOString()};
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function getP(id){ for(var i=0;i<DB.projects.length;i++) if(DB.projects[i].id===id) return DB.projects[i]; return null; }
+function getR(id){ for(var i=0;i<DB.runs.length;i++) if(DB.runs[i].id===id) return DB.runs[i]; return null; }
+function getI(id){ for(var i=0;i<DB.ideas.length;i++) if(DB.ideas[i].id===id) return DB.ideas[i]; return null; }
+function now(){ return new Date().toISOString(); }
 
-function gK() { return localStorage.getItem("ca_key") || ""; }
+/* ================= HELPERS ================= */
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+function fmtD(iso){ try{ return new Date(iso).toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}); }catch(e){ return ""; } }
+function fmtDT(iso){ try{ return new Date(iso).toLocaleString("nl-NL",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}); }catch(e){ return ""; } }
+function ageDays(iso){ return Math.floor((Date.now()-new Date(iso).getTime())/864e5); }
+function ago(iso){ var d=ageDays(iso); return d<=0?"vandaag":d===1?"gisteren":d+" dagen geleden"; }
+function today(){ return new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"long",year:"numeric"}); }
+function toast(t){ var e=document.getElementById("toast"); e.textContent=t; e.style.display="block"; clearTimeout(toast.t); toast.t=setTimeout(function(){e.style.display="none";},2600); }
+var ICON={
+  back:'<svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>',
+  trash:'<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>',
+  pdf:'<svg viewBox="0 0 24 24"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M12 12v6M9 15l3 3 3-3"/></svg>',
+  edit:'<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
+  mic:'<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>'
+};
+function topBar(html){ document.getElementById("top").innerHTML=html; }
+function topBack(title, right){ topBar('<button class="ib" onclick="goBack()" aria-label="Terug">'+ICON.back+'</button><div class="ttl">'+esc(title)+'</div>'+(right||"")); }
+function goBack(){ if(history.length>1) history.back(); else go("#/"); }
 
-function saveK() {
-  var k = (document.getElementById("ki").value || "").trim();
-  if (!k.startsWith("sk-ant-")) { document.getElementById("ke").style.display = "block"; return; }
-  document.getElementById("ke").style.display = "none";
-  localStorage.setItem("ca_key", k);
-  show("I"); updK();
+/* ================= SETTINGS DATA ================= */
+function gKey(){ return lsGet("ca_key",""); }
+function gModel(){ return lsGet("ca_model","")||"claude-sonnet-4-6"; }
+function gWeb(){ return lsGet("ca_web","1")==="1"; }
+function exportData(){
+  var blob=new Blob([JSON.stringify(DB,null,1)],{type:"application/json"});
+  var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="charlys-agents-backup-"+now().slice(0,10)+".json"; a.click();
+}
+function importData(inp){
+  var f=inp.files[0]; if(!f) return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    try{
+      var d=JSON.parse(rd.result); if(!d.projects||!d.runs) throw 0;
+      if(!confirm("Back-up samenvoegen? ("+d.projects.length+" projecten, "+d.runs.length+" analyses, "+((d.ideas||[]).length)+" ideeën)")) return;
+      d.projects.forEach(function(p){ if(!getP(p.id)) DB.projects.push(p); });
+      d.runs.forEach(function(r){ if(!getR(r.id)) DB.runs.push(r); });
+      (d.ideas||[]).forEach(function(x){ if(!getI(x.id)) DB.ideas.push(x); });
+      DB.projects.forEach(function(p){ if(p.assumptions==null) p.assumptions=""; });
+      save(); toast("Teruggezet"); route();
+    }catch(e){ toast("Geen geldig back-upbestand"); }
+  };
+  rd.readAsText(f); inp.value="";
 }
 
-function resetK() {
-  if (confirm("Wil je je API key wijzigen?")) { localStorage.removeItem("ca_key"); show("S"); }
+/* ================= ROUTER ================= */
+function go(h){ if(location.hash===h) route(); else location.hash=h; }
+var CUR={v:null,id:null};
+function route(){
+  closeSheet();
+  var h=location.hash||"#/", m, tab="home";
+  if(m=h.match(/^#\/idee\/(\w+)/)){ CUR={v:"idea",id:m[1]}; tab="pipe"; vIdea(m[1]); }
+  else if(m=h.match(/^#\/project\/(\w+)\/bewerk/)){ CUR={v:"edit",id:m[1]}; tab="pipe"; vEdit(m[1]); }
+  else if(h==="#/project-nieuw"){ CUR={v:"edit",id:null}; tab="pipe"; vEdit(null); }
+  else if(m=h.match(/^#\/project\/(\w+)/)){ CUR={v:"project",id:m[1]}; tab="pipe"; vProject(m[1]); }
+  else if(m=h.match(/^#\/analyse\/(\w+)/)){ CUR={v:"run",id:m[1]}; tab="runs"; vRun(m[1]); }
+  else if(m=h.match(/^#\/pijplijn\/?(\w*)/)){ CUR={v:"pipe",id:m[1]||"idee"}; tab="pipe"; vPipe(m[1]||"idee"); }
+  else if(h==="#/analyses"){ CUR={v:"runs"}; tab="runs"; vRuns(); }
+  else if(h==="#/instellingen"){ CUR={v:"set"}; tab="set"; vSettings(); }
+  else { CUR={v:"home"}; vHome(); }
+  var tbs=document.querySelectorAll(".tb"); for(var i=0;i<tbs.length;i++) tbs[i].classList.toggle("on",tbs[i].getAttribute("data-t")===tab);
+}
+window.addEventListener("hashchange",function(){ route(); window.scrollTo(0,0); });
+function render(html){ document.getElementById("app").innerHTML='<div class="view">'+html+'</div>'; }
+function rerender(v,id){
+  if(CUR.v!==v || (id!=null && CUR.id!==id)) return;
+  var y=window.scrollY, open=[].map.call(document.querySelectorAll("details[data-k]"),function(d){ return d.getAttribute("data-k")+":"+(d.open?1:0); });
+  route();
+  open.forEach(function(s){ var p=s.split(":"), d=document.querySelector('details[data-k="'+p[0]+'"]'); if(d) d.open=p[1]==="1"; });
+  var v2=document.querySelector(".view"); if(v2) v2.style.animation="none";
+  window.scrollTo(0,y);
 }
 
-function updK() {
-  var ok = !!gK();
-  document.getElementById("kd").className = ok ? "kd" : "kd off";
-  document.getElementById("kl").textContent = ok ? "API key actief - tik om te wijzigen" : "Geen API key - tik om in te stellen";
+/* ================= STAGES ================= */
+function stageOf(x){
+  if(x.killed) return "gestopt";
+  if(x.projectId && getP(x.projectId)) return "project";
+  if(x.test && x.test.started) return "test";
+  return "idee";
+}
+function ideaTitle(x){ var t=(x.an&&x.an.s==="done"&&sec(x.an.t,"naam"))||(x.dump||"").split("\n")[0]; t=plainInline(t||"Leeg idee").replace(/[#*]/g,"").trim(); return t.length>70?t.slice(0,70)+"...":t; }
+function ideaPill(x){
+  var s=stageOf(x);
+  if(s==="gestopt") return '<span class="pill er">gestopt</span>';
+  if(s==="project") return '<span class="pill ok">project</span>';
+  if(s==="test"){ var r=x.test.result; return r==="ok"?'<span class="pill ok">test geslaagd</span>':r==="fail"?'<span class="pill er">test gesneuveld</span>':'<span class="pill am"><span class="dot"></span>test loopt · '+ageDays(x.test.started)+'d</span>'; }
+  if(ACTIVE_I[x.id]) return '<span class="pill am"><span class="dot"></span>bezig</span>';
+  if(x.an&&x.an.s==="done") return '<span class="pill gd">ontleed</span>';
+  if(x.ex&&x.ex.s==="done") return '<span class="pill">verkend</span>';
+  return '<span class="pill">ruw</span>';
+}
+function ideaCardHtml(x){ return '<div class="card tap row" onclick="go(\'#/idee/'+x.id+'\')"><div class="grow"><div class="t1 ell">'+esc(ideaTitle(x))+'</div><div class="t2">'+ago(x.updated)+'</div></div>'+ideaPill(x)+'</div>'; }
+function projCardHtml(p){
+  var n=DB.runs.filter(function(r){return r.projectId===p.id;}).length, old=ageDays(p.updated)>30;
+  return '<div class="card tap" onclick="go(\'#/project/'+p.id+'\')"><div class="row between"><div class="t1 grow ell" style="font-family:\'Playfair Display\',serif;font-size:17px;font-weight:700">'+esc(p.name)+'</div>'+(old?'<span class="pill am">dossier '+ageDays(p.updated)+'d oud</span>':'<span class="pill">'+n+' analyses</span>')+'</div><div class="t2">'+esc(p.desc)+'</div></div>';
+}
+function runSummary(r){
+  var ids=r.agents.concat(["rg"]), d=0,e=0,l=0;
+  ids.forEach(function(id){ var x=r.res[id]; if(!x) return; if(x.s==="done") d++; else if(x.s==="err") e++; else l++; });
+  return {d:d,e:e,l:l,t:ids.length};
+}
+function runPill(r){ var s=runSummary(r); if(ACTIVE[r.id]) return '<span class="pill am"><span class="dot"></span>bezig</span>'; if(s.l) return '<span class="pill am">onderbroken</span>'; if(s.e) return '<span class="pill er">'+s.e+' fout</span>'; return '<span class="pill ok">klaar</span>'; }
+function runCardHtml(r, showProj){
+  var p=getP(r.projectId);
+  return '<div class="card tap row" onclick="go(\'#/analyse/'+r.id+'\')"><div class="grow"><div class="t1 ell">'+esc(r.q||"Algemene analyse")+'</div><div class="t2">'+(showProj&&p?esc(p.name)+' · ':'')+fmtDT(r.created)+' · '+r.agents.length+' agents</div></div>'+runPill(r)+'</div>';
 }
 
-function show(id) {
-  var all = document.querySelectorAll(".scr");
-  for (var i = 0; i < all.length; i++) all[i].classList.remove("on");
-  document.getElementById(id).classList.add("on");
-  window.scrollTo(0, 0);
+/* ================= HOME ================= */
+var DRAFT="";
+function vHome(){
+  topBar('<div class="logo grow">Charly\'s <em>Agents</em></div>');
+  var html='';
+  if(!gKey()) html+='<div class="ban am tap" onclick="go(\'#/instellingen\')" style="margin-bottom:16px">&#9888;&#65039; Nog geen API key. Tik hier om hem in te stellen.</div>';
+  html+='<div class="eyebrow">'+hello()+'</div><h1>Wat zit er in<br><em>je hoofd?</em></h1><p class="lead" style="margin-bottom:16px">Gooi het eruit, hoe wild ook. Daarna maken we het groot, halen het koel uit elkaar en testen wat het echt draagt.</p>';
+  html+='<div class="cap"><textarea id="cap" placeholder="Wat als..." oninput="DRAFT=this.value">'+esc(DRAFT)+'</textarea><div class="btns">'+
+    (speechOK()?'<button class="mic" id="micb" onclick="toggleMic(\'cap\')" aria-label="Dicteer">'+ICON.mic+'</button>':'')+
+    '<button class="b2 gd grow" onclick="capture(\'ex\')">&#10024; Fantaseer mee</button><button class="b2 grow" onclick="capture(\'an\')">&#128298; Ontleed</button></div></div>';
+  var att=[];
+  DB.ideas.forEach(function(x){
+    if(stageOf(x)!=="test") return;
+    if(!x.test.result) att.push({ic:"\u{1F9EA}",bg:"var(--ams)",t:"Test loopt: "+ideaTitle(x),s:(ageDays(x.test.started)>=7?"Al "+ageDays(x.test.started)+" dagen. Wat is de uitkomst?":"Gestart "+ago(x.test.started)+". Vul de uitkomst in als je hem hebt."),go:"#/idee/"+x.id});
+    else if(x.test.result==="ok") att.push({ic:"\u2705",bg:"var(--oks)",t:"Test geslaagd: "+ideaTitle(x),s:"Klaar om er een project van te maken.",go:"#/idee/"+x.id});
+    else att.push({ic:"\u26A0\uFE0F",bg:"var(--ers)",t:"Test gesneuveld: "+ideaTitle(x),s:"Stoppen of bijsturen?",go:"#/idee/"+x.id});
+  });
+  DB.runs.forEach(function(r){ var s=runSummary(r); if(!ACTIVE[r.id] && s.l) att.push({ic:"\u23F8\uFE0F",bg:"var(--card2)",t:"Analyse onderbroken",s:esc((getP(r.projectId)||{}).name||"")+": hervat waar hij stopte.",go:"#/analyse/"+r.id}); });
+  DB.projects.forEach(function(p){ if(ageDays(p.updated)>30) att.push({ic:"\u{1F4C2}",bg:"var(--card2)",t:"Dossier verouderd: "+p.name,s:ageDays(p.updated)+" dagen niet bijgewerkt. Klopt de stand van zaken nog?",go:"#/project/"+p.id+"/bewerk"}); });
+  html+='<h2>Wacht op jou <span class="cnt">'+att.length+'</span></h2>';
+  html+= att.length ? att.slice(0,6).map(function(a){ return '<div class="card tap att" onclick="go(\''+a.go+'\')"><div class="ic" style="background:'+a.bg+'">'+a.ic+'</div><div class="grow"><div class="t1 ell">'+esc(a.t)+'</div><div class="t2">'+a.s+'</div></div></div>'; }).join("") : '<div class="empty">Niets dat op je wacht. Tijd voor een nieuw idee.</div>';
+  var c={idee:0,test:0,project:0,gestopt:0}; DB.ideas.forEach(function(x){ c[stageOf(x)]++; });
+  html+='<h2>Pijplijn</h2><div class="stats">'+stat("idee","Ideeën",c.idee)+stat("test","In test",c.test,true)+stat("project","Projecten",DB.projects.length)+stat("gestopt","Gestopt",c.gestopt)+'</div>';
+  var rs=DB.runs.slice().sort(function(a,b){return b.created.localeCompare(a.created);}).slice(0,3);
+  if(rs.length) html+='<h2>Laatste analyses <button class="lnk" onclick="go(\'#/analyses\')">alles</button></h2>'+rs.map(function(r){return runCardHtml(r,true);}).join("");
+  render(html);
+}
+function stat(k,l,n,hi){ return '<div class="stat'+(hi&&n?' hi':'')+'" onclick="go(\'#/pijplijn/'+k+'\')"><b>'+n+'</b><span>'+l+'</span></div>'; }
+function hello(){ var h=new Date().getHours(); return h<6?"Nachtbraker":h<12?"Goedemorgen Charly":h<18?"Goedemiddag Charly":"Goedenavond Charly"; }
+function capture(step){
+  var t=(document.getElementById("cap").value||"").trim();
+  if(!t){ toast("Schrijf eerst iets op"); document.getElementById("cap").focus(); return; }
+  var x={id:uid(),created:now(),updated:now(),dump:t,note:""};
+  DB.ideas.push(x); save(); DRAFT="";
+  go("#/idee/"+x.id); runIdea(x.id, step);
+}
+function quickIdea(){
+  if(CUR.v!=="home"){ go("#/"); setTimeout(function(){ var c=document.getElementById("cap"); if(c) c.focus(); },80); }
+  else { var c=document.getElementById("cap"); if(c){ window.scrollTo({top:0,behavior:"smooth"}); c.focus(); } }
+}
+var REC=null;
+function speechOK(){ return !!(window.SpeechRecognition||window.webkitSpeechRecognition); }
+function toggleMic(fid){
+  var b=document.getElementById("micb");
+  if(REC){ try{REC.stop();}catch(e){} REC=null; if(b) b.classList.remove("on"); return; }
+  try{
+    var S=window.SpeechRecognition||window.webkitSpeechRecognition; REC=new S(); REC.lang="nl-NL"; REC.continuous=true; REC.interimResults=false;
+    var f=document.getElementById(fid);
+    REC.onresult=function(e){ for(var i=e.resultIndex;i<e.results.length;i++) if(e.results[i].isFinal){ f.value=(f.value?f.value.replace(/\s*$/," "):"")+e.results[i][0].transcript; DRAFT=f.value; } };
+    REC.onend=function(){ REC=null; var bb=document.getElementById("micb"); if(bb) bb.classList.remove("on"); };
+    REC.start(); if(b) b.classList.add("on"); toast("Praat maar...");
+  }catch(e){ REC=null; toast("Dicteren niet beschikbaar; gebruik de microfoon op je toetsenbord"); }
 }
 
-function saveRES() {
-  try { localStorage.setItem("ca_res", JSON.stringify({idea: IDEA, res: RES, ts: Date.now()})); } catch(e) {}
+/* ================= PIPELINE ================= */
+function vPipe(tab){
+  topBar('<div class="ttl" style="font-size:17px">Pijplijn</div><button class="b2 sm gd" onclick="go(\'#/project-nieuw\')">+ Project</button>');
+  var c={idee:[],test:[],project:[],gestopt:[]}; DB.ideas.forEach(function(x){ c[stageOf(x)].push(x); });
+  Object.keys(c).forEach(function(k){ c[k].sort(function(a,b){return (b.updated||"").localeCompare(a.updated||"");}); });
+  var tabs=[["idee","Idee",c.idee.length],["test","Test",c.test.length],["project","Project",DB.projects.length],["gestopt","Gestopt",c.gestopt.length]];
+  var html='<div class="seg">'+tabs.map(function(t){ return '<button class="'+(t[0]===tab?'on':'')+'" onclick="go(\'#/pijplijn/'+t[0]+'\')">'+t[1]+'<i>'+t[2]+'</i></button>'; }).join("")+'</div>';
+  var hint={idee:"Ruwe, verkende en ontlede ideeën. Nog niets getest.",test:"De gevaarlijkste aanname wordt getest. Vul de uitkomst in zodra je hem hebt.",project:"Wat overeind bleef, of wat je bewust direct als project bent gestart.",gestopt:"Eerlijk gestopt. Ook dat is winst: tijd en geld die je niet kwijt bent."}[tab]||"";
+  html+='<p class="lead" style="font-size:13px;margin-bottom:14px">'+hint+'</p>';
+  if(tab==="project"){
+    var ps=DB.projects.slice().sort(function(a,b){return (b.updated||"").localeCompare(a.updated||"");});
+    html+= ps.length ? ps.map(projCardHtml).join("") : '<div class="empty">Nog geen projecten.</div>';
+  } else {
+    html+= (c[tab]||[]).length ? c[tab].map(ideaCardHtml).join("") : '<div class="empty">Leeg.'+(tab==="idee"?' Tik op + om een idee te dumpen.':'')+'</div>';
+  }
+  render(html);
 }
 
-function loadSaved() {
-  try {
-    var d = JSON.parse(localStorage.getItem("ca_res"));
-    if (!d || !d.res) return;
-    IDEA = d.idea || ""; RES = d.res; LS = new Set(); AID = "st"; SYNRES = "";
-    show("R");
-    document.getElementById("ir").textContent = IDEA || "Geladen analyse";
-    document.getElementById("hbadge").textContent = "Klaar";
-    document.getElementById("pf").style.width = "100%";
-    document.getElementById("pc").textContent = "8 / 8";
-    document.getElementById("synbox").innerHTML = "";
-    rTabs(); rRes();
-  } catch(e) {}
+/* ================= IDEA ================= */
+var ACTIVE_I={}, saveT=null;
+function vIdea(id){
+  var x=getI(id); if(!x){ go("#/"); return; }
+  topBack("Idee",'<button class="ib" onclick="delIdea(\''+id+'\')" aria-label="Verwijder">'+ICON.trash+'</button>');
+  var st=stageOf(x), busy=!!ACTIVE_I[id];
+  var hasEx=x.ex&&x.ex.s==="done", hasAn=x.an&&x.an.s==="done";
+  var done=[true, hasEx||hasAn, hasAn, (st==="test"&&!!x.test.result)||st==="project", st==="project"];
+  var curI=0; for(var i=0;i<done.length;i++) if(done[i]) curI=i+1;
+  var names=["Dump","Verken","Ontleed","Test","Project"];
+  var html='<div class="steps">'+names.map(function(n,i){ var cls=(x.killed&&i===Math.min(curI,4))?"kill":(i<curI?"done":(i===curI?"cur":"")); return '<div class="st '+cls+'"><i>'+(cls==="done"?"&#10003;":cls==="kill"?"&#10005;":(i+1))+'</i>'+n+'</div>'; }).join("")+'</div>';
+  html+='<h1 style="font-size:26px">'+esc(ideaTitle(x))+'</h1><div class="row mt8" style="margin-bottom:16px">'+ideaPill(x)+'<span class="t2" style="margin:0">gestart '+ago(x.created)+'</span></div>';
+  if(x.killed) html+='<div class="ban er" style="margin-bottom:14px"><div class="grow"><strong>Gestopt</strong> op '+fmtD(x.killed.at)+(x.killed.why?': '+esc(x.killed.why):'')+'</div><button class="b2 sm" onclick="reopenIdea(\''+id+'\')">Heropen</button></div>';
+  html+='<details class="card" data-k="dump" '+(hasAn||busy?'':'open')+'><summary><div class="av sm" style="background:var(--card2)">&#128173;</div><div class="grow"><div class="t1">Jouw idee</div><div class="t2 ell">'+esc((x.dump||"").slice(0,90))+'</div></div></summary><div style="padding:14px 16px"><textarea id="dump" style="min-height:140px" oninput="ideaField(\''+id+'\',\'dump\',this.value)">'+esc(x.dump)+'</textarea>'+
+    '<div class="btns two mt12"><button class="b2 gd" '+(busy?'disabled':'')+' onclick="runIdea(\''+id+'\',\'ex\')">&#10024; '+(hasEx?'Opnieuw verkennen':'Fantaseer mee')+'</button><button class="b2" '+(busy?'disabled':'')+' onclick="runIdea(\''+id+'\',\'an\')">&#128298; '+(hasAn?'Opnieuw ontleden':'Ontleed')+'</button></div></div></details>';
+  if(x.ex) html+='<div class="mt12">'+stepCard(VERKENNER,x.ex,id,"ex",hasAn)+'</div>';
+  if(hasEx && !(x.an && x.an.s!=="err")){
+    html+='<div class="card mt12"><label class="l" style="margin-top:0">Wat pak je eruit? Wat laat je vallen? <span>(gaat mee naar De Ontleder)</span></label><textarea oninput="ideaField(\''+id+'\',\'note\',this.value)" placeholder="Bijv. variant 2 spreekt me aan, verhuur laat ik vallen...">'+esc(x.note||"")+'</textarea><button class="b full mt12" '+(busy?'disabled':'')+' onclick="runIdea(\''+id+'\',\'an\')">&#128298; Nu koel uit elkaar halen</button></div>';
+  }
+  if(x.an) html+='<div class="mt12">'+stepCard(ONTLEDER,x.an,id,"an",false)+'</div>';
+  if(hasAn && !x.killed && !busy) html+=testBlock(x);
+  if(x.history&&x.history.length) html+='<h2>Eerdere tests</h2>'+x.history.map(function(hh){ return '<div class="card"><div class="row between"><div class="t1">'+fmtD(hh.started)+'</div>'+(hh.result==="ok"?'<span class="pill ok">geslaagd</span>':'<span class="pill er">gesneuveld</span>')+'</div><div class="t2" style="white-space:pre-wrap">'+esc(hh.text)+(hh.note?"\n\nUitkomst: "+esc(hh.note):"")+'</div></div>'; }).join("");
+  render(html);
 }
-
-function checkSaved() {
-  try {
-    var d = JSON.parse(localStorage.getItem("ca_res"));
-    if (d && d.res && Object.keys(d.res).length > 0) {
-      document.getElementById("svbar").classList.add("on");
-      document.getElementById("svtxt").textContent = "Analyse van " + new Date(d.ts || Date.now()).toLocaleDateString("nl-NL") + " beschikbaar";
+function stepCard(ag, st, id, step, collapsed){
+  var head='<summary>'+avatar(ag,st.s==="done"?"done":st.s==="err"?"err":"run",true)+'<div class="grow"><div class="t1" style="color:'+ag.cl+'">'+ag.nm+'</div><div class="t2">'+ag.rl+'</div></div></summary>';
+  if(st.s==="run") return '<details class="card" open>'+head+'<div class="load"><div class="sp"></div>'+ag.nm+' is bezig...</div></details>';
+  if(st.s==="err") return '<details class="card" open>'+head+'<div style="padding:14px 16px"><div class="ban er">Fout: '+esc(st.e)+'</div><button class="b2 mt12" onclick="runIdea(\''+id+'\',\''+step+'\')">&#8635; Opnieuw proberen</button></div></details>';
+  return '<details class="card" data-k="'+step+'" '+(collapsed?'':'open')+'>'+head+'<div class="md">'+md(st.t)+'</div></details>';
+}
+function testBlock(x){
+  var id=x.id, t=x.test, st=stageOf(x);
+  var html='<h2>De test</h2>';
+  if(st==="project") return html+'<div class="ban ok"><div class="grow">Dit idee is nu een project.</div><button class="b2 sm ok" onclick="go(\'#/project/'+x.projectId+'\')">Open</button></div>';
+  if(!t || !t.started){
+    var sug=sec(x.an.t,"kleinste"), stop=sec(x.an.t,"stop");
+    var txt=(t&&t.text)||(plainInline(sug)+(stop?"\n\nStopcriterium: "+plainInline(stop):""));
+    html+='<div class="card gold"><div class="t2" style="margin:0 0 10px">Voorstel van De Ontleder. Maak er een test van die je deze week echt gaat doen.</div><textarea id="testtxt" style="min-height:130px" oninput="testField(\''+id+'\',this.value)">'+esc(txt)+'</textarea>'+
+      '<button class="b full mt12" onclick="startTest(\''+id+'\')">&#129514; Start deze test</button>'+
+      '<div class="row between mt8"><button class="lnk" onclick="ideaToProject(\''+id+'\')">Toch direct een project maken</button><button class="lnk" onclick="killIdea(\''+id+'\')">Idee stoppen</button></div></div>';
+    return html;
+  }
+  html+='<div class="card '+(t.result?'':'gold')+'"><div class="row between" style="margin-bottom:8px"><span class="t2" style="margin:0">Gestart '+fmtD(t.started)+'</span>'+(t.result==="ok"?'<span class="pill ok">aanname klopt</span>':t.result==="fail"?'<span class="pill er">gesneuveld</span>':'<span class="pill am"><span class="dot"></span>'+ageDays(t.started)+' dagen</span>')+'</div><div style="white-space:pre-wrap;font-size:14px;line-height:1.6">'+esc(t.text)+'</div>';
+  if(!t.result){
+    html+='<label class="l">Wat kwam eruit? <span>(wat hoorde of zag je, cijfers, citaten)</span></label><textarea id="testnote" oninput="testNote(\''+id+'\',this.value)" placeholder="Bijv. 4 van de 10 zeiden ja, twee willen een proefmaand...">'+esc(t.note||"")+'</textarea>'+
+      '<div class="btns two mt12"><button class="b2 ok" onclick="testResult(\''+id+'\',\'ok\')">&#10003; Aanname klopt</button><button class="b2 er" onclick="testResult(\''+id+'\',\'fail\')">&#10005; Gesneuveld</button></div>';
+  } else {
+    if(t.note) html+='<div class="ban mu mt12" style="white-space:pre-wrap">Uitkomst: '+esc(t.note)+'</div>';
+    if(t.result==="ok") html+='<button class="b full mt12" onclick="ideaToProject(\''+id+'\')">Maak hier een project van &rarr;</button><button class="lnk" style="display:block" onclick="retest(\''+id+'\')">Eerst nog een aanname testen</button>';
+    else html+='<div class="btns two mt12"><button class="b2 gd" onclick="pivot(\''+id+'\')">&#128260; Bijsturen</button><button class="b2 er" onclick="killIdea(\''+id+'\')">Stop dit idee</button></div><div class="t2 mt8">Bijsturen: De Ontleder kijkt opnieuw, met deze uitkomst erbij, en stelt een nieuwe richting en test voor.</div>';
+    html+='<button class="lnk" style="display:block" onclick="undoResult(\''+id+'\')">Uitkomst wijzigen</button>';
+  }
+  return html+'</div>';
+}
+function ideaField(id,f,v){ var x=getI(id); if(!x) return; x[f]=v; x.updated=now(); clearTimeout(saveT); saveT=setTimeout(save,400); }
+function testField(id,v){ var x=getI(id); if(!x) return; x.test=x.test||{}; x.test.text=v; clearTimeout(saveT); saveT=setTimeout(save,400); }
+function testNote(id,v){ var x=getI(id); if(!x) return; x.test.note=v; clearTimeout(saveT); saveT=setTimeout(save,400); }
+function startTest(id){ var x=getI(id), v=document.getElementById("testtxt").value.trim(); if(!v){ toast("Beschrijf eerst de test"); return; } x.test={text:v,started:now(),result:null,note:""}; x.updated=now(); save(); toast("Test gestart. Succes!"); rerender("idea",id); }
+function testResult(id,r){ var x=getI(id), n=document.getElementById("testnote"); x.test.note=n?n.value.trim():x.test.note; if(!x.test.note && !confirm("Zonder uitkomst vastleggen? Een korte notitie helpt het team later enorm.")) return; x.test.result=r; x.test.decided=now(); x.updated=now(); save(); rerender("idea",id); }
+function undoResult(id){ var x=getI(id); x.test.result=null; save(); rerender("idea",id); }
+function retest(id){ var x=getI(id); x.history=x.history||[]; x.history.push(x.test); x.test=null; x.updated=now(); save(); rerender("idea",id); }
+function killIdea(id){ var why=prompt("Waarom stop je? (helpt je later patronen te zien)",""); if(why===null) return; var x=getI(id); x.killed={at:now(),why:why}; x.updated=now(); save(); toast("Gestopt. Eerlijk is winst."); rerender("idea",id); }
+function reopenIdea(id){ var x=getI(id); delete x.killed; x.updated=now(); save(); rerender("idea",id); }
+function delIdea(id){ if(!confirm("Dit idee definitief verwijderen?")) return; DB.ideas=DB.ideas.filter(function(x){return x.id!==id;}); save(); go("#/pijplijn/idee"); }
+function pivot(id){ var x=getI(id); x.history=x.history||[]; x.history.push(x.test); x.test=null; save(); runIdea(id,"an"); }
+async function runIdea(id, step){
+  var x=getI(id); if(!x) return;
+  if(!gKey()){ toast("Stel eerst je API key in"); go("#/instellingen"); return; }
+  var dEl=document.getElementById("dump"); if(dEl && CUR.v==="idea" && CUR.id===id) x.dump=dEl.value;
+  x.dump=(x.dump||"").trim(); if(!x.dump){ toast("Schrijf eerst je idee op"); return; }
+  if(ACTIVE_I[id]) return; ACTIVE_I[id]=step;
+  x[step]={s:"run"}; if(step==="ex") x.an=null; x.updated=now(); save(); rerender("idea",id);
+  try{
+    var t;
+    if(step==="ex") t=await callClaude(sysVerkenner(),"Mijn idee:\n\n"+x.dump,false);
+    else{
+      var u="HET RUWE IDEE VAN CHIEL:\n"+x.dump;
+      if(x.ex&&x.ex.s==="done") u+="\n\n=== VERKENNING (fantasie van De Verkenner, niets hiervan is bewezen) ===\n"+x.ex.t;
+      if(x.note) u+="\n\n=== REACTIE VAN CHIEL OP DE VERKENNING ===\n"+x.note;
+      (x.history||[]).forEach(function(hh){ u+="\n\n=== EERDERE TEST ("+(hh.result==="ok"?"GESLAAGD":"GESNEUVELD")+") ===\nTest: "+hh.text+"\nUitkomst: "+(hh.note||"(geen notitie)"); });
+      if(x.history&&x.history.length) u+="\n\nNeem de testuitkomsten serieus: verplaats bewezen zaken naar Feiten, schrap of herformuleer gesneuvelde aannames, en stel indien nodig een bijgestuurde richting voor. De Kleinste test gaat over de VOLGENDE gevaarlijkste aanname.";
+      t=await callClaude(sysOntleder(),u,gWeb());
     }
-  } catch(e) {}
+    x[step]={s:"done",t:t};
+  }catch(e){ x[step]={s:"err",e:e.message||String(e)}; }
+  ACTIVE_I[id]=null; x.updated=now(); save(); rerender("idea",id); rerender("home"); rerender("pipe");
+}
+function sysVerkenner(){
+  return "Je bent De Verkenner, de creatieve sparringpartner van Chiel van Tongeren (Charly), ondernemer en creatieve maker uit Apeldoorn. Chiel heeft een wild idee en wil het groot denken. Jouw rol: maak het rijker en groter, zonder kritiek (die komt later van iemand anders). Vandaag is het "+today()+".\n\nStructuur (markdown):\n## Op z'n best\n(beeldend, één alinea: hoe ziet dit eruit als het echt slaagt, over 3 jaar)\n## Varianten\n(3 tot 4 duidelijk verschillende richtingen, elk met één zin waarom interessant)\n## Verdienmodellen\n## Wie moet erbij\n(partners, doelgroepen, bondgenoten)\n## Nog wilder\n(één versie die nog een stap verder gaat)\n\nWees enthousiast maar concreet, geen holle superlatieven. Presenteer niets als vaststaand feit. Nederlands, max. ca. 550 woorden.";
+}
+function sysOntleder(){
+  return "Je bent De Ontleder in het adviesteam van Chiel van Tongeren (Charly), ondernemer uit Apeldoorn. Chiel denkt groot en vult ideeën aan met dingen die hij erbij fantaseert. Jouw taak: koel en nuchter scheiden wat waar is van wat bedacht is, en de snelste weg naar bewijs vinden. Vandaag is het "+today()+".\n\nGebruik EXACT deze kopjes (markdown, in deze volgorde):\n## Naam\n(werktitel, max 5 woorden, alleen de titel)\n## Kern\n(één zin: wat is het, voor wie, en waarom zou iemand ervoor betalen)\n## Feiten\n(alleen wat aantoonbaar waar is; als je het hebt gecontroleerd noem de bron. Wat Chiel stelt maar niet onderbouwt hoort NIET hier maar bij Aannames. Leeg is prima: schrijf dan 'Nog geen harde feiten.')\n## Aannames\n(genummerd, gesorteerd op risico: de aanname die het hele idee onderuit haalt als hij niet klopt staat bovenaan. Per aanname een halve zin waarom hij kritiek is)\n## Open vragen\n## Kleinste test\n(voor de gevaarlijkste aanname: wat kan Chiel DEZE WEEK doen, met hooguit circa 100 euro of een paar gesprekken, om hem te bevestigen of te schrappen. Heel concreet: wie bellen, wat vragen, wat bouwen. Plus een succescriterium dat je VOORAF vastlegt, bv. 'minstens 3 van de 10 zeggen ja op...')\n## Stopcriterium\n(wanneer moet Chiel dit idee eerlijk laten vallen)\n\nWees direct. Geen algemeenheden. Nederlands, max. ca. 600 woorden.";
+}
+function sec(t,name){
+  var out={},cur=null;
+  String(t||"").split("\n").forEach(function(l){ var m=l.match(/^#{1,4}\s+(.*)$/); if(m){ cur=m[1].replace(/[*_`]/g,"").trim().toLowerCase(); out[cur]=""; } else if(cur!==null) out[cur]+=l+"\n"; });
+  for(var k in out) if(k.indexOf(name)===0) return out[k].trim();
+  return "";
+}
+var PREFILL=null;
+function ideaToProject(id){
+  var x=getI(id); if(!x||!x.an||x.an.s!=="done") return;
+  var t=x.an.t, clean=function(s){ return plainInline(s).replace(/^#+\s*/gm,"").trim(); };
+  var feiten=sec(t,"feiten"), open=sec(t,"open"), stop=sec(t,"stop");
+  var tests=(x.history||[]).concat(x.test&&x.test.result?[x.test]:[]);
+  var tst=tests.map(function(hh){ return "- Test ("+(hh.result==="ok"?"bevestigd":"gesneuveld")+", "+fmtD(hh.started)+"): "+hh.text.split("\n")[0]+(hh.note?" -> Uitkomst: "+hh.note:""); }).join("\n");
+  PREFILL={ideaId:id,p:{
+    name:clean(sec(t,"naam")).split("\n")[0]||ideaTitle(x),
+    desc:clean(sec(t,"kern")).replace(/\n/g," "),
+    ctx:"Oorspronkelijk idee:\n"+x.dump+"\n\nFeiten:\n"+(feiten||"Nog geen harde feiten.")+(tst?"\n\nGetest:\n"+tst:"")+(open?"\n\nOpen vragen:\n"+open:""),
+    assumptions:sec(t,"aannames"),
+    status:"Gestart vanuit de ideemodus op "+fmtD(now())+"."+(x.test&&x.test.result==="ok"?"\nEerste test geslaagd.":"\nNog niet getest.")+(stop?"\n\nStopcriterium:\n"+stop:"")
+  }};
+  go("#/project-nieuw");
 }
 
-var grid = document.getElementById("ag");
-AG.forEach(function(a) {
-  var c = document.createElement("div");
-  c.className = "acard";
-  c.innerHTML = '<div class="aico" style="background:' + a.bg + ';color:' + a.cl + '">' + a.ltr + '</div><div><div class="anm" style="color:' + a.cl + '">' + a.nm + '</div><div class="arl">' + a.rl + '</div></div>';
-  grid.appendChild(c);
-});
-
-function callA(a, idea) {
-  var key = gK();
-  if (!key) return Promise.reject(new Error("Geen API key"));
-  return fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": key,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true"
-    },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1024,
-      system: a.sy,
-      messages: [{role: "user", content: idea ? "Aanvullende vraag: " + idea : "Geef een volledige analyse op basis van de projectcontext."}]
-    })
-  }).then(function(r) {
-    if (!r.ok) return r.json().then(function(e) { throw new Error((e.error && e.error.message) || "HTTP " + r.status); });
-    return r.json();
-  }).then(function(d) {
-    if (d.error) throw new Error(d.error.message || "API fout");
-    return (d.content || []).map(function(b) { return b.text || ""; }).join("") || "Geen inhoud.";
-  });
+/* ================= PROJECT ================= */
+var SEL={};
+function vProject(id){
+  var p=getP(id); if(!p){ go("#/pijplijn/project"); return; }
+  topBack("Project",'<button class="ib" onclick="go(\'#/project/'+id+'/bewerk\')" aria-label="Bewerk">'+ICON.edit+'</button>');
+  if(!SEL[id]){ SEL[id]={}; AGENTS.forEach(function(a){SEL[id][a.id]=true;}); }
+  var age=ageDays(p.updated), src=DB.ideas.filter(function(x){return x.projectId===id;})[0];
+  var html='<div class="eyebrow">Project</div><h1>'+esc(p.name)+'</h1><p class="lead">'+esc(p.desc)+'</p><div class="row mt12" style="flex-wrap:wrap"><span class="pill '+(age>30?'am':'')+'">dossier bijgewerkt '+ago(p.updated)+'</span>'+(src?'<span class="pill gd tap" onclick="go(\'#/idee/'+src.id+'\')">uit ideemodus &rarr;</span>':'')+'</div>';
+  if(age>30) html+='<div class="ban am mt12"><div class="grow">Het team gaat uit van wat in het dossier staat. Klopt de stand van zaken nog?</div><button class="b2 sm" onclick="go(\'#/project/'+id+'/bewerk\')">Bijwerken</button></div>';
+  html+='<h2>Dossier</h2>'+dosCard("\u2705","Feiten & context",p.ctx)+dosCard("\u2753","Aannames",p.assumptions||"(nog geen aannames: vul ze in, anders behandelt het team alles als feit)")+dosCard("\u{1F4CD}","Stand van zaken",p.status);
+  html+='<h2>Vraag het team</h2><div class="card gold"><textarea id="q" placeholder="Wat wil je weten of uitgewerkt hebben? Leeg = algemene analyse van de huidige fase."></textarea>'+
+    '<div class="row between mt12" style="margin-bottom:8px"><span class="t2" style="margin:0">Wie doet er mee?</span><button class="lnk" style="padding:0" onclick="selAll(\''+id+'\')">alles / niets</button></div><div class="pick" id="pick">'+pickHtml(id)+'</div>'+
+    '<div class="t2" style="margin:4px 0 12px">Researcher zoekt eerst de feiten &rarr; specialisten &rarr; Advocaat v/d Duivel valt aan &rarr; reacties &rarr; De Regisseur schrijft het besluit.</div>'+
+    '<button class="b full" onclick="startRun(\''+id+'\')">Zet het team aan het werk &rarr;</button></div>';
+  var hs=DB.runs.filter(function(r){return r.projectId===id;}).sort(function(a,b){return b.created.localeCompare(a.created);});
+  html+='<h2>Analyses <span class="cnt">'+hs.length+'</span></h2>'+(hs.length?hs.map(function(r){return runCardHtml(r,false);}).join(""):'<div class="empty">Nog geen analyses.</div>');
+  render(html);
+}
+function dosCard(ic,t,body){ return '<details class="card"><summary><div class="av sm" style="background:var(--card2)">'+ic+'</div><div class="grow"><div class="t1">'+t+'</div><div class="t2 ell">'+esc((body||"").replace(/\n/g," · ").slice(0,90))+'</div></div></summary><div class="dos">'+esc(body)+'</div></details>'; }
+function pickHtml(id){ return AGENTS.map(function(a){ return '<button class="pk'+(SEL[id][a.id]?' on':'')+'" onclick="togPick(\''+id+'\',\''+a.id+'\')">'+avatar(a)+esc(a.nm.replace(/^De /,""))+'</button>'; }).join(""); }
+function togPick(pid,aid){ SEL[pid][aid]=!SEL[pid][aid]; document.getElementById("pick").innerHTML=pickHtml(pid); }
+function selAll(pid){ var any=AGENTS.some(function(a){return SEL[pid][a.id];}); AGENTS.forEach(function(a){ SEL[pid][a.id]=!any; }); document.getElementById("pick").innerHTML=pickHtml(pid); }
+function vEdit(id){
+  var p=id?getP(id):(PREFILL?PREFILL.p:{name:"",desc:"",ctx:"",assumptions:"",status:""});
+  if(id&&!p){ go("#/"); return; }
+  topBack(id?"Dossier bewerken":(PREFILL?"Project uit idee":"Nieuw project"));
+  var html='<div class="eyebrow">'+(PREFILL&&!id?"Controleer en pas aan":"Dossier")+'</div><h1>Wat weet<br><em>het team?</em></h1><p class="lead">Scheid feiten van aannames. Het team behandelt aannames nooit als feit, maar kan dat alleen als jij ze hier eerlijk neerzet.</p>'+
+    '<label class="l">Naam</label><input type="text" id="e_name" value="'+esc(p.name)+'" placeholder="Bijv. Woonarken Apeldoorns Kanaal"/>'+
+    '<label class="l">Eén zin: wat is het?</label><input type="text" id="e_desc" value="'+esc(p.desc)+'"/>'+
+    '<label class="l">&#9989; Feiten &amp; context <span>(wat vaststaat of bewezen is)</span></label><textarea id="e_ctx" style="min-height:150px">'+esc(p.ctx)+'</textarea>'+
+    '<label class="l">&#10067; Aannames <span>(wat je denkt maar niet weet, gevaarlijkste eerst)</span></label><textarea id="e_ass" style="min-height:110px" placeholder="1. Er is genoeg vraag naar...">'+esc(p.assumptions||"")+'</textarea>'+
+    '<label class="l">&#128205; Stand van zaken <span>(wat loopt er, wat is de volgende stap)</span></label><textarea id="e_status" style="min-height:100px">'+esc(p.status)+'</textarea>'+
+    '<button class="b full mt24" onclick="saveProject(\''+(id||"")+'\')">Opslaan</button>'+
+    (id?'<button class="b2 er mt12" style="width:100%" onclick="delProject(\''+id+'\')">Project verwijderen</button>':'');
+  render(html);
+}
+function saveProject(id){
+  var n=document.getElementById("e_name").value.trim(); if(!n){ toast("Geef het project een naam"); return; }
+  var p=id?getP(id):{id:uid(),created:now()};
+  p.name=n; p.desc=document.getElementById("e_desc").value.trim(); p.ctx=document.getElementById("e_ctx").value.trim();
+  p.assumptions=document.getElementById("e_ass").value.trim(); p.status=document.getElementById("e_status").value.trim(); p.updated=now();
+  if(!id){ DB.projects.push(p); if(PREFILL){ var x=getI(PREFILL.ideaId); if(x){ x.projectId=p.id; x.updated=now(); } } }
+  PREFILL=null; save(); toast("Opgeslagen");
+  history.replaceState(null,"","#/project/"+p.id); route(); window.scrollTo(0,0);
+}
+function delProject(id){
+  var p=getP(id), n=DB.runs.filter(function(r){return r.projectId===id;}).length;
+  if(!confirm('"'+p.name+'" en '+n+' analyses definitief verwijderen?')) return;
+  DB.projects=DB.projects.filter(function(x){return x.id!==id;}); DB.runs=DB.runs.filter(function(r){return r.projectId!==id;});
+  DB.ideas.forEach(function(x){ if(x.projectId===id) delete x.projectId; });
+  save(); go("#/pijplijn/project");
 }
 
-function go() {
-  if (!gK()) { show("S"); return; }
-  IDEA = document.getElementById("ii").value.trim();
-  RES = {}; LS = new Set(AG.map(function(a) { return a.id; })); AID = "st"; SYNRES = "";
-  show("R");
-  document.getElementById("ir").textContent = IDEA || "Volledige projectanalyse";
-  document.getElementById("hbadge").textContent = "0 / 8 klaar";
-  document.getElementById("synbox").innerHTML = "";
-  rTabs(); rRes();
-  var chain = Promise.resolve();
-  AG.forEach(function(a) {
-    chain = chain.then(function() {
-      return callA(a, IDEA).then(function(txt) {
-        RES[a.id] = txt;
-      }).catch(function(e) {
-        RES[a.id] = "__E__" + e.message;
-      }).then(function() {
-        LS.delete(a.id); upP(); rTabs();
-        if (AID === a.id) rRes();
+/* ================= API ================= */
+function sleep(ms){ return new Promise(function(r){setTimeout(r,ms);}); }
+async function callClaude(system, user, useWeb){
+  var key=gKey(); if(!key) throw new Error("Geen API key ingesteld (Instellingen).");
+  var base=Array.isArray(user)?user:[{role:"user",content:user}];
+  var messages=base, texts=[], cites={}, note="";
+  for(var turn=0;turn<4;turn++){
+    var body={model:gModel(),max_tokens:4000,system:system,messages:messages};
+    if(useWeb) body.tools=[{type:"web_search_20250305",name:"web_search",max_uses:4}];
+    var resp=null;
+    for(var attempt=0;attempt<3;attempt++){
+      resp=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify(body)});
+      if(resp.status===429||resp.status===529||resp.status>=500){ await sleep(4000*(attempt+1)); continue; }
+      break;
+    }
+    if(!resp.ok){
+      var j={}; try{ j=await resp.json(); }catch(x){}
+      var msg=(j.error&&j.error.message)||("HTTP "+resp.status);
+      if(useWeb&&/web_search|tool/i.test(msg)){ useWeb=false; note="\n\n_(Web search niet beschikbaar voor deze key: analyse zonder bronnen.)_"; turn--; continue; }
+      if(resp.status===404||/model/i.test(msg)) msg+=" (Controleer het model in Instellingen.)";
+      if(resp.status===401) msg+=" (API key ongeldig.)";
+      if(/credit|balance/i.test(msg)) msg+=" (Tegoed op? Kijk in console.anthropic.com.)";
+      throw new Error(msg);
+    }
+    var d=await resp.json();
+    (d.content||[]).forEach(function(b){ if(b.type==="text"){ texts.push(b.text); (b.citations||[]).forEach(function(c){ if(c.url) cites[c.url]=c.title||c.url; }); } });
+    if(d.stop_reason==="pause_turn"){ messages=base.concat([{role:"assistant",content:d.content}]); continue; }
+    if(d.stop_reason==="max_tokens") note+="\n\n_(Antwoord afgekapt op maximale lengte.)_";
+    break;
+  }
+  var out=texts.join("").trim()||"Geen inhoud ontvangen.";
+  var urls=Object.keys(cites);
+  if(urls.length) out+="\n\n## Bronnen\n"+urls.map(function(u){return "- ["+cites[u].replace(/[\[\]]/g,"")+"]("+u+")";}).join("\n");
+  return out+note;
+}
+function projBlock(p){
+  return "PROJECT: "+p.name+"\n"+p.desc+"\n\nFEITEN & CONTEXT:\n"+p.ctx+"\n\nAANNAMES (NIET BEWEZEN - behandel deze NOOIT als feit; benoem welke aanname jouw advies het meest bepaalt):\n"+(p.assumptions||"(geen opgegeven - wees extra alert op zaken in de context die als feit gepresenteerd worden maar eigenlijk aannames zijn)")+"\n\nSTAND VAN ZAKEN (bijgewerkt "+fmtD(p.updated)+"):\n"+p.status;
+}
+function sysAgent(a,p){
+  return "Je bent "+a.nm+" in het persoonlijke adviesteam van Chiel van Tongeren (Charly), ondernemer uit Apeldoorn met meerdere projecten en bedrijven. Hij is initiatiefnemer en werkt met partners.\n\n"+projBlock(p)+"\n\nVandaag is het "+today()+". Als de stand van zaken verouderd lijkt (data in het verleden die nog als 'verwacht' staan), benoem dat dan.\n\nJOUW TAAK: "+a.task+"\n\nREGELS: Schrijf in het Nederlands. Wees concreet en specifiek voor dit project, geen algemeenheden. Verzin geen feiten, namen of cijfers: als je iets niet zeker weet, zeg dat of markeer het als AANNAME. Gebruik markdown (## kopjes, opsommingen, eventueel een tabel). Max. ca. 700 woorden. Sluit af met '## Acties' met max. 3 concrete volgende stappen.";
+}
+function sysReg(p){
+  return "Je bent De Regisseur in het adviesteam van Chiel van Tongeren (Charly). Je krijgt de analyses van de specialisten over dit project. Jouw taak: er één scherp besluitdocument van maken.\n\n"+projBlock(p)+"\n\nStructuur (markdown):\n## Kern\n(max 3 zinnen)\n## Waar het team het over eens is\n## Tegenstrijdigheden\n(welke specialisten spreken elkaar tegen, wat is waarschijnlijk juist, wat moet worden uitgezocht)\n## Wat de kritiekronde opleverde\n(welke kritiek van de Advocaat van de Duivel hout snijdt, wie gaf toe, wie weerlegde overtuigend)\n## Grootste risico\n## Eerst testen\n(de aanname die het hele plan draagt en de kleinste, goedkoopste test om hem te bevestigen of te schrappen, met succescriterium)\n## Besluiten die Chiel nu moet nemen\n(max 3)\n## Acties komende 14 dagen\n(genummerd, met wie)\n\nWees kritisch: neem geen onderbouwde claims over als feit, en wijs op aannames zonder bron. Nederlands, max. ca. 700 woorden.";
+}
+
+/* ================= RUNS ================= */
+var ACTIVE={};
+function startRun(pid){
+  if(!gKey()){ toast("Stel eerst je API key in"); go("#/instellingen"); return; }
+  var ids=AGENTS.filter(function(a){return SEL[pid][a.id];}).map(function(a){return a.id;});
+  if(!ids.length){ toast("Kies minstens één specialist"); return; }
+  var r={id:uid(),projectId:pid,q:document.getElementById("q").value.trim(),agents:ids,created:now(),res:{}};
+  ids.forEach(function(id){ r.res[id]={s:"wait"}; }); r.res.rg={s:"wait"};
+  DB.runs.push(r); save(); go("#/analyse/"+r.id); execRun(r.id);
+}
+function pool(items,n,fn){ var i=0; function w(){ return i<items.length?Promise.resolve(fn(items[i++])).then(w):Promise.resolve(); } var ws=[]; for(var k=0;k<Math.min(n,items.length);k++) ws.push(w()); return Promise.all(ws); }
+function qText(r){ return r.q?"Vraag van Chiel: "+r.q:"Geef je analyse van dit project in de huidige fase."; }
+function factsMsg(r){ var x=r.res.re; return (x&&x.s==="done")?"\n\n=== FEITENRONDE (De Researcher heeft dit al uitgezocht; bouw hierop voort, spreek het alleen tegen met onderbouwing) ===\n"+x.t:""; }
+function specIds(r){ return r.agents.filter(function(id){ return id!=="re"&&id!=="dv"; }); }
+function refresh(rid){
+  if(CUR.v==="run"&&CUR.id===rid){
+    var y=window.scrollY, sh=SHEET, sy=sh?document.getElementById("sh-b").scrollTop:0;
+    vRun(rid); var v2=document.querySelector(".view"); if(v2) v2.style.animation="none"; window.scrollTo(0,y);
+    if(sh&&sh.run===rid){ openAgent(sh.id); document.getElementById("sh-b").scrollTop=sy; }
+  }
+}
+async function execRun(rid){
+  if(ACTIVE[rid]) return;
+  var r=getR(rid), p=getP(r.projectId);
+  function ph(t){ ACTIVE[rid]=t; refresh(rid); }
+  async function one(id,fn){
+    r.res[id]={s:"run"}; save(); refresh(rid);
+    try{ r.res[id]={s:"done",t:await fn(),at:now()}; }catch(e){ r.res[id]={s:"err",e:e.message||String(e)}; }
+    save(); refresh(rid);
+  }
+  try{
+    if(!p) throw new Error("Project niet gevonden");
+    ACTIVE[rid]="Starten";
+    r.agents.concat(["rg"]).forEach(function(id){ if(r.res[id].s!=="done") r.res[id]={s:"wait"}; });
+    if(r.agents.indexOf("re")>=0&&r.res.re.s!=="done"){ ph("Feitenronde"); await one("re",function(){ return callClaude(sysAgent(agentById("re"),p),qText(r),gWeb()); }); }
+    var todo=specIds(r).filter(function(id){ return r.res[id].s!=="done"; });
+    if(todo.length){ ph("Specialisten"); await pool(todo,3,function(id){ var a=agentById(id); return one(id,function(){ return callClaude(sysAgent(a,p),qText(r)+factsMsg(r),a.web&&gWeb()); }); }); }
+    var doneIds=r.agents.filter(function(id){ return id!=="dv"&&r.res[id].s==="done"; });
+    if(r.agents.indexOf("dv")>=0&&r.res.dv.s!=="done"&&doneIds.length){
+      ph("Kritiekronde");
+      var list=doneIds.map(function(id){ return id+" = "+agentById(id).nm; }).join(", ");
+      var bundle=qText(r)+"\n\nHieronder de analyses van je teamgenoten. Val de zwakste punten aan: te optimistische aannames, cijfers die niet kloppen of niet onderbouwd zijn, tegenstrijdigheden tussen specialisten, blinde vlekken. Noem steeds wie je aanvalt en waarom. Wees specifiek, citeer waar nodig.\n\n"+doneIds.map(function(id){ return "=== "+agentById(id).nm+" ("+id+") ===\n"+r.res[id].t; }).join("\n\n")+"\n\nSluit af met exact één regel in dit formaat (max 3 codes, alleen de specialisten die het meest moeten reageren):\nAANGEVALLEN: code1, code2\nCodes: "+list;
+      await one("dv",function(){ return callClaude(sysAgent(agentById("dv"),p),bundle,false); });
+      r.attacked=[];
+      if(r.res.dv.s==="done"){
+        var m=r.res.dv.t.match(/AANGEVALLEN:\s*([^\n]*)/i);
+        if(m) r.attacked=m[1].split(/[,\s]+/).map(function(x){return x.trim().toLowerCase();}).filter(function(x){ return doneIds.indexOf(x)>=0; }).slice(0,3);
+        r.res.dv.t=r.res.dv.t.replace(/\n?.*AANGEVALLEN:[^\n]*/i,"").trim();
+        if(r.attacked.length) r.res.dv.t+="\n\n**Moeten reageren:** "+r.attacked.map(function(id){return agentById(id).nm;}).join(", ");
+      }
+      save();
+    }
+    var reps=(r.attacked||[]).filter(function(id){ return r.res[id].s==="done"&&!(r.res[id].rep&&r.res[id].rep.s==="done"); });
+    if(reps.length&&r.res.dv.s==="done"){
+      ph("Reacties");
+      await pool(reps,3,async function(id){
+        var a=agentById(id); r.res[id].rep={s:"run"}; save(); refresh(rid);
+        try{
+          var msgs=[{role:"user",content:qText(r)+factsMsg(r)},{role:"assistant",content:r.res[id].t},{role:"user",content:"De Advocaat van de Duivel heeft het team bekritiseerd:\n\n"+r.res.dv.t+"\n\nReageer alleen op de kritiek die jou raakt. Geef ruiterlijk toe waar hij gelijk heeft en herzie dan concreet je advies; weerleg met argumenten waar hij ongelijk heeft. Geen herhaling van je eerdere analyse. Max. 250 woorden, geen hoofdkop."}];
+          r.res[id].rep={s:"done",t:await callClaude(sysAgent(a,p),msgs,false)};
+        }catch(e){ r.res[id].rep={s:"err",e:e.message||String(e)}; }
+        save(); refresh(rid);
       });
+    }
+    doneIds=r.agents.filter(function(id){ return r.res[id].s==="done"; });
+    if(r.res.rg.s!=="done"){
+      if(doneIds.length<2) r.res.rg={s:"err",e:"Te weinig geslaagde analyses om samen te vatten."};
+      else{
+        ph("Synthese");
+        var all=(r.q?"VRAAG VAN CHIEL: "+r.q:"Algemene analyse van de huidige fase.")+"\n\n"+doneIds.map(function(id){
+          var x=r.res[id], t="=== "+agentById(id).nm+(id==="dv"?" (KRITIEKRONDE)":"")+" ===\n"+x.t;
+          if(x.rep&&x.rep.s==="done") t+="\n\n--- Reactie van "+agentById(id).nm+" op de kritiek ---\n"+x.rep.t;
+          return t;
+        }).join("\n\n");
+        await one("rg",function(){ return callClaude(sysReg(p),all,false); });
+      }
+    }
+    save();
+  } finally { ACTIVE[rid]=false; refresh(rid); }
+}
+function resumeRun(rid){ execRun(rid); }
+function retryOne(rid,id){
+  var r=getR(rid); if(!r||ACTIVE[rid]) return;
+  r.res[id]={s:"wait"};
+  if(id!=="rg"){
+    r.res.rg={s:"wait"};
+    if(r.agents.indexOf("dv")>=0){ if(id!=="dv") r.res.dv={s:"wait"}; (r.attacked||[]).forEach(function(k){ if(r.res[k]) delete r.res[k].rep; }); r.attacked=[]; }
+  }
+  save(); closeSheet(); execRun(rid);
+}
+var PHMAP={"Feitenronde":"Feiten","Specialisten":"Specialisten","Kritiekronde":"Kritiek","Reacties":"Reacties","Synthese":"Besluit"};
+function phases(r){
+  function agg(ids){ if(!ids.length) return "skip"; var s=ids.map(function(id){return (r.res[id]||{}).s;}); if(s.every(function(x){return x==="done";})) return "done"; if(s.some(function(x){return x==="run";})) return "run"; if(s.some(function(x){return x==="err";})&&!s.some(function(x){return x==="wait";})) return "err"; return "wait"; }
+  var hasDv=r.agents.indexOf("dv")>=0, repS="skip";
+  if(hasDv){ var dvs=(r.res.dv||{}).s; if(dvs!=="done") repS=dvs==="err"?"skip":"wait"; else if(!(r.attacked||[]).length) repS="skip"; else { var rs=r.attacked.map(function(id){ return (r.res[id].rep||{}).s||"wait"; }); repS=rs.every(function(x){return x==="done";})?"done":rs.some(function(x){return x==="run";})?"run":rs.some(function(x){return x==="err";})?"err":"wait"; } }
+  var ph=[["Feiten",r.agents.indexOf("re")>=0?r.res.re.s:"skip"],["Specialisten",agg(specIds(r))],["Kritiek",hasDv?r.res.dv.s:"skip"],["Reacties",repS],["Besluit",r.res.rg.s]];
+  if(ACTIVE[r.id]) ph.forEach(function(q){ if(q[1]==="wait"&&PHMAP[ACTIVE[r.id]]===q[0]) q[1]="run"; });
+  return ph;
+}
+function vRun(rid){
+  var r=getR(rid); if(!r){ go("#/analyses"); return; }
+  var p=getP(r.projectId)||{name:"(verwijderd project)"};
+  topBack(p.name,'<button class="ib" onclick="allPDF(\''+rid+'\')" aria-label="PDF">'+ICON.pdf+'</button><button class="ib" onclick="delRun(\''+rid+'\')" aria-label="Verwijder">'+ICON.trash+'</button>');
+  var s=runSummary(r), running=!!ACTIVE[rid];
+  var html='<div class="eyebrow">Analyse · '+fmtDT(r.created)+'</div><h1 style="font-size:24px;line-height:1.25">'+esc(r.q||"Algemene analyse van de huidige fase")+'</h1>';
+  html+='<div class="tl">'+phases(r).map(function(q){ return '<div class="tn '+q[1]+'"><i></i>'+q[0]+'</div>'; }).join("")+'</div>';
+  if(running) html+='<div class="ban mu" style="margin-bottom:14px"><div class="sp" style="width:16px;height:16px;flex-shrink:0;margin-top:2px"></div><div>'+esc(ACTIVE[rid])+'... Sluit de app gerust: wat klaar is, is bewaard, en je hervat later waar hij stopte.</div></div>';
+  else if(s.l||s.e) html+='<div class="ban am" style="margin-bottom:14px"><div class="grow">'+(s.l?"Deze analyse is niet afgerond.":s.e+" onderdeel mislukt.")+'</div><button class="b2 sm" onclick="resumeRun(\''+rid+'\')">&#8635; Hervat</button></div>';
+  var rg=r.res.rg||{s:"wait"};
+  html+='<div class="card gold dec"><div class="dech">'+avatar(REG,rg.s==="done"?"done":rg.s==="err"?"err":rg.s==="run"?"run":null)+'<div class="grow"><div style="font-family:\'Playfair Display\',serif;font-size:19px;font-weight:700;color:var(--g)">Het besluit</div><div class="t2">De Regisseur · alles samengevat</div></div>'+(rg.s==="done"?'<button class="b2 sm" onclick="onePDF(\''+rid+'\',\'rg\')">PDF</button>':'')+'</div>';
+  if(rg.s==="done") html+='<div class="md">'+md(rg.t)+'</div>';
+  else if(rg.s==="err") html+='<div style="padding:16px"><div class="ban er">'+esc(rg.e)+'</div>'+(running?'':'<button class="b2 mt12" onclick="retryOne(\''+rid+'\',\'rg\')">&#8635; Opnieuw</button>')+'</div>';
+  else html+='<div style="padding:16px"><div class="t2" style="margin:0 0 6px">'+(rg.s==="run"?"De Regisseur schrijft het besluit...":"Verschijnt zodra het team klaar is.")+'</div><div class="skel" style="width:80%"></div><div class="skel" style="width:95%"></div><div class="skel" style="width:60%"></div></div>';
+  html+='</div>';
+  html+='<h2>Het team <span class="cnt">'+s.d+' / '+s.t+' klaar</span></h2><div class="grid">'+tabOrder(r).filter(function(id){return id!=="rg";}).map(function(id){
+    var a=agentById(id), x=r.res[id]||{s:"wait"}, st=x.s==="done"?"done":x.s==="err"?"err":x.s==="run"?"run":null;
+    var sub=x.s==="done"?(x.rep?(x.rep.s==="done"?"reageerde op kritiek":x.rep.s==="run"?"reageert op kritiek...":"reactie mislukt"):(id==="dv"&&(r.attacked||[]).length?"viel "+r.attacked.length+" specialisten aan":"klaar")):x.s==="run"?"aan het werk...":x.s==="err"?"fout, tik voor details":(running?"wacht":"niet gedaan");
+    return '<div class="card tap ag" onclick="openAgent(\''+id+'\')">'+avatar(a,st)+'<div class="grow" style="min-width:0"><div class="n ell">'+esc(a.nm)+'</div><div class="r ell">'+sub+'</div></div></div>';
+  }).join("")+'</div>';
+  render(html);
+}
+function tabOrder(r){ var o=["rg"]; if(r.agents.indexOf("re")>=0) o.push("re"); return o.concat(specIds(r)).concat(r.agents.indexOf("dv")>=0?["dv"]:[]); }
+function delRun(rid){ if(!confirm("Deze analyse verwijderen?")) return; var pid=getR(rid).projectId; DB.runs=DB.runs.filter(function(r){return r.id!==rid;}); save(); history.replaceState(null,"","#/project/"+pid); route(); }
+function vRuns(){
+  topBar('<div class="ttl" style="font-size:17px">Analyses</div>');
+  var rs=DB.runs.slice().sort(function(a,b){return b.created.localeCompare(a.created);});
+  render(rs.length?rs.map(function(r){return runCardHtml(r,true);}).join(""):'<div class="empty">Nog geen analyses. Open een project en vraag het team.</div>');
+}
+
+/* ================= SHEET ================= */
+var SHEET=null;
+function openAgent(id){
+  var r=getR(CUR.id); if(!r) return;
+  var a=agentById(id), x=r.res[id]||{s:"wait"}, running=!!ACTIVE[r.id];
+  var first=!SHEET; SHEET={run:r.id,id:id};
+  document.getElementById("sh-h").innerHTML='<div class="row">'+avatar(a,x.s==="done"?"done":x.s==="err"?"err":x.s==="run"?"run":null)+'<div class="grow"><div style="font-family:\'Playfair Display\',serif;font-size:18px;font-weight:700;color:'+a.cl+'">'+esc(a.nm)+'</div><div class="t2">'+esc(a.rl)+'</div></div><button class="ib" onclick="closeSheet()" aria-label="Sluit">&#10005;</button></div>';
+  var b="";
+  if(x.s==="done") b='<div class="md">'+md(x.t)+(x.rep?'<div class="rep"><div style="color:var(--g);font-weight:600;margin-bottom:10px">Reactie op de kritiek</div>'+(x.rep.s==="done"?md(x.rep.t):x.rep.s==="err"?esc(x.rep.e):"<em>bezig...</em>")+'</div>':'')+'</div>';
+  else if(x.s==="err") b='<div style="padding:16px"><div class="ban er">'+esc(x.e)+'</div></div>';
+  else b='<div class="load"><div class="sp"></div>'+(x.s==="run"?esc(a.nm)+" is aan het werk...":waitMsg(r,id))+'</div>';
+  document.getElementById("sh-b").innerHTML=b;
+  var f=(x.s==="done"?'<button class="b2" onclick="onePDF(\''+r.id+'\',\''+id+'\')">&#128196; PDF</button><button class="b2" onclick="copyTxt(\''+r.id+'\',\''+id+'\')">Kopieer</button>':'')+(!running&&(x.s==="done"||x.s==="err")?'<button class="b2" onclick="retryOne(\''+r.id+'\',\''+id+'\')">&#8635; Opnieuw</button>':'');
+  document.getElementById("sh-f").innerHTML=f?'<div class="btns two">'+f+'</div>':'';
+  if(first) document.getElementById("sh-b").scrollTop=0;
+  document.getElementById("ov").classList.add("on"); document.getElementById("sheet").classList.add("on");
+  document.body.style.overflow="hidden";
+}
+function waitMsg(r,id){ if(id==="dv") return "Wacht op de specialisten, valt daarna aan..."; if(r.agents.indexOf("re")>=0&&id!=="re"&&r.res.re.s!=="done"&&r.res.re.s!=="err") return "Wacht op de feitenronde..."; return ACTIVE[r.id]?"In de wachtrij...":"Niet uitgevoerd. Tik op Hervat."; }
+function closeSheet(){ SHEET=null; var o=document.getElementById("ov"), s=document.getElementById("sheet"); if(o) o.classList.remove("on"); if(s) s.classList.remove("on"); document.body.style.overflow=""; }
+function copyTxt(rid,id){
+  var x=getR(rid).res[id], t=x&&x.t; if(!t) return;
+  if(x.rep&&x.rep.s==="done") t+="\n\n## Reactie op de kritiek\n"+x.rep.t;
+  try{ navigator.clipboard.writeText(t).then(function(){toast("Gekopieerd");},function(){toast("Kopiëren mislukt");}); }catch(e){ toast("Kopiëren mislukt"); }
+}
+
+/* ================= SETTINGS VIEW ================= */
+function vSettings(){
+  topBar('<div class="ttl" style="font-size:17px">Instellingen</div>');
+  var kb=Math.round((lsGet(DBKEY,"")||"").length/1024);
+  render('<div class="card"><label class="l" style="margin-top:0">Anthropic API key</label><input type="password" id="s_key" value="'+esc(gKey())+'" placeholder="sk-ant-..." autocomplete="off" spellcheck="false"/><div class="t2 mt8">Staat alleen op dit apparaat. Aanmaken via console.anthropic.com &rarr; API Keys.</div>'+
+    '<label class="l">Model</label><input type="text" id="s_model" value="'+esc(gModel())+'" spellcheck="false"/><div class="t2 mt8">Standaard claude-sonnet-4-6.</div>'+
+    '<div class="row between mt16"><div class="grow"><div class="t1">Web search</div><div class="t2">Researcher, Marktanalist, Analist, Maker, Jurist en Ontleder zoeken echte bronnen. Kost extra; moet in je Console aan staan.</div></div><label class="sw"><input type="checkbox" id="s_web" '+(gWeb()?'checked':'')+'/><span></span></label></div>'+
+    '<button class="b full mt16" onclick="saveSettings()">Opslaan</button></div>'+
+    '<h2>Je data</h2><div class="card"><div class="t2" style="margin:0 0 12px">'+DB.ideas.length+' ideeën, '+DB.projects.length+' projecten, '+DB.runs.length+' analyses · ca. '+kb+' KB van ~5.000 KB. Alles staat in deze browser. Maak af en toe een back-up, of zet je data zo over naar een ander apparaat.</div><div class="btns two"><button class="b2" onclick="exportData()">&#8615; Back-up maken</button><button class="b2" onclick="document.getElementById(\'imp\').click()">&#8613; Terugzetten</button></div></div>');
+}
+function saveSettings(){
+  var k=document.getElementById("s_key").value.trim();
+  if(k&&k.indexOf("sk-ant-")!==0){ toast("Key moet beginnen met sk-ant-"); return; }
+  if(k) lsSet("ca_key",k); else lsDel("ca_key");
+  lsSet("ca_model",document.getElementById("s_model").value.trim()||"claude-sonnet-4-6");
+  lsSet("ca_web",document.getElementById("s_web").checked?"1":"0");
+  toast("Opgeslagen"); go("#/");
+}
+
+/* ================= MARKDOWN ================= */
+function inl(s){
+  s=esc(s);
+  s=s.replace(/`([^`]+)`/g,"<code>$1</code>");
+  s=s.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>").replace(/__([^_]+)__/g,"<strong>$1</strong>");
+  s=s.replace(/(^|[^*])\*([^*\s][^*]*)\*/g,"$1<em>$2</em>").replace(/(^|\s)_([^_]+)_(?=\s|$|[.,;:])/g,"$1<em>$2</em>");
+  s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  return s;
+}
+function md(src){
+  var L=String(src||"").replace(/\r/g,"").split("\n"),out=[],i=0,para=[];
+  function flush(){ if(para.length){ out.push("<p>"+para.map(inl).join("<br>")+"</p>"); para=[]; } }
+  while(i<L.length){
+    var t=L[i].trim(),m;
+    if(!t){ flush(); i++; continue; }
+    if(m=t.match(/^(#{1,4})\s+(.*)$/)){ flush(); var lv=Math.min(4,m[1].length+1); out.push("<h"+lv+">"+inl(m[2])+"</h"+lv+">"); i++; continue; }
+    if(/^(-{3,}|\*{3,}|_{3,})$/.test(t)){ flush(); out.push("<hr>"); i++; continue; }
+    if(t.charAt(0)==="|"){
+      flush(); var rows=[]; while(i<L.length&&L[i].trim().charAt(0)==="|"){ rows.push(L[i].trim()); i++; }
+      var h="<table>",first=true;
+      rows.forEach(function(rw){ if(/^\|?[\s:\-|]+\|?$/.test(rw)) return; var cells=rw.replace(/^\||\|$/g,"").split("|"); h+="<tr>"+cells.map(function(cv){ return (first?"<th>":"<td>")+inl(cv.trim())+(first?"</th>":"</td>"); }).join("")+"</tr>"; first=false; });
+      out.push(h+"</table>"); continue;
+    }
+    if(/^([-*\u2022]|\d+[.)])\s+/.test(t)){
+      flush(); var ord=/^\d/.test(t),items=[];
+      while(i<L.length&&/^\s*([-*\u2022]|\d+[.)])\s+/.test(L[i])){ var ind=L[i].match(/^\s*/)[0].length>=2; items.push((ind?"&nbsp;&nbsp;&nbsp;&nbsp;":"")+inl(L[i].trim().replace(/^([-*\u2022]|\d+[.)])\s+/,""))); i++; }
+      out.push((ord?"<ol>":"<ul>")+items.map(function(x){return "<li>"+x+"</li>";}).join("")+(ord?"</ol>":"</ul>")); continue;
+    }
+    para.push(t); i++;
+  }
+  flush(); return out.join("");
+}
+
+/* ================= PDF ================= */
+function hxRgb(h){ return {r:parseInt(h.slice(1,3),16),g:parseInt(h.slice(3,5),16),b:parseInt(h.slice(5,7),16)}; }
+function tint(c,f){ return {r:Math.round(c.r+(255-c.r)*f),g:Math.round(c.g+(255-c.g)*f),b:Math.round(c.b+(255-c.b)*f)}; }
+function pdfSafe(s){
+  return String(s).replace(/\u20AC\s?/g,"EUR ").replace(/[\u2192\u279C\u27A1]/g,"->").replace(/\u2190/g,"<-").replace(/\u2248/g,"~").replace(/\u2265/g,">=").replace(/\u2264/g,"<=")
+    .replace(/[\u2022\u25CF\u25AA]/g,"-").replace(/[\u2013\u2014]/g,"-").replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/\u2026/g,"...").replace(/\u00D7/g,"x")
+    .replace(/[\u2713\u2714\u2705]/g,"v").replace(/[\u274C\u2717]/g,"x").replace(/[^\x00-\xFF]/g,"");
+}
+function plainInline(s){ return String(s||"").replace(/\*\*([^*]+)\*\*/g,"$1").replace(/__([^_]+)__/g,"$1").replace(/`([^`]+)`/g,"$1").replace(/(^|[^*])\*([^*\s][^*]*)\*/g,"$1$2").replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g,"$1 ($2)"); }
+function mkPDF(ids,r,title){
+  if(!window.jspdf){ toast("PDF-bibliotheek laadt nog, probeer zo opnieuw"); return; }
+  var p=getP(r.projectId)||{name:""};
+  var doc=new window.jspdf.jsPDF({unit:"mm",format:"a4"});
+  var W=210,H=297,m=18,lw=W-m*2,y=0,pageNo=1;
+  doc.setFillColor(11,11,12); doc.rect(0,0,W,H,"F");
+  doc.setTextColor(212,178,122); doc.setFont("helvetica","bold"); doc.setFontSize(26); doc.text("Charly's Agents",m,55);
+  doc.setFont("helvetica","normal"); doc.setFontSize(14); doc.setTextColor(243,238,228); doc.text(doc.splitTextToSize(pdfSafe(p.name),lw),m,68);
+  doc.setFontSize(11); doc.setTextColor(180,170,150); doc.text(doc.splitTextToSize(pdfSafe(title),lw),m,80);
+  if(r.q){ doc.setFontSize(10); doc.text(doc.splitTextToSize(pdfSafe('"'+r.q+'"'),lw),m,92); }
+  doc.setFontSize(9); doc.setTextColor(120,110,90); doc.text(pdfSafe(fmtDT(r.created)),m,280);
+  function foot(a){ doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(170,160,140); doc.text(pdfSafe(a.nm+" - "+p.name),m,289); doc.text(String(++pageNo),W-m,289,{align:"right"}); }
+  ids.forEach(function(id){
+    var a=agentById(id),x=r.res[id]; if(!x||x.s!=="done") return;
+    var col=hxRgb(a.cl),tn=tint(col,.88);
+    doc.addPage(); doc.setFillColor(tn.r,tn.g,tn.b); doc.rect(0,0,W,30,"F"); doc.setFillColor(col.r,col.g,col.b); doc.rect(0,0,4,30,"F");
+    doc.setTextColor(Math.round(col.r*.7),Math.round(col.g*.7),Math.round(col.b*.7)); doc.setFont("helvetica","bold"); doc.setFontSize(16); doc.text(pdfSafe(id==="rg"?"Het besluit - De Regisseur":a.nm),m,14);
+    doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(110,100,85); doc.text(pdfSafe(a.rl.toUpperCase()),m,22);
+    foot(a); y=40;
+    function need(h){ if(y+h>278){ doc.addPage(); foot(a); y=m; } }
+    var full=x.t+((x.rep&&x.rep.s==="done")?"\n\n## Reactie op de kritiek\n"+x.rep.t:"");
+    pdfSafe(full).replace(/\r/g,"").split("\n").forEach(function(raw){
+      var t=raw.trim(),mm;
+      if(!t){ y+=2.5; return; }
+      if(/^(-{3,}|\*{3,})$/.test(t)) return;
+      if(/^\|?[\s:\-|]+\|?$/.test(t)&&t.indexOf("-")>=0) return;
+      if(mm=t.match(/^#{1,4}\s+(.*)$/)){ need(12); y+=3; doc.setFont("helvetica","bold"); doc.setFontSize(12); doc.setTextColor(Math.round(col.r*.75),Math.round(col.g*.75),Math.round(col.b*.75)); doc.splitTextToSize(plainInline(mm[1]),lw).forEach(function(s){ need(6); doc.text(s,m,y); y+=6; }); y+=1; return; }
+      var indent=0,bullet="";
+      if(t.charAt(0)==="|"){ t=t.replace(/^\||\|$/g,"").split("|").map(function(s){return s.trim();}).join("  |  "); }
+      else if(mm=t.match(/^([-*]|\d+[.)])\s+(.*)$/)){ bullet=/^\d/.test(mm[1])?mm[1]:"-"; t=mm[2]; indent=6; if(/^\s{2,}/.test(raw)) indent=11; }
+      var isB=/^\*\*[^*]+\*\*:?$/.test(t);
+      doc.setFont("helvetica",isB?"bold":"normal"); doc.setFontSize(10); doc.setTextColor(40,36,28);
+      doc.splitTextToSize(plainInline(t),lw-indent).forEach(function(s,k){ need(5.5); if(k===0&&bullet) doc.text(bullet,m+indent-5,y); doc.text(s,m+indent,y); y+=5.2; });
+      y+=0.8;
     });
   });
-  chain.then(function() { saveRES(); });
+  doc.save((p.name+"-"+title).replace(/[^a-z0-9]+/gi,"_").toLowerCase().slice(0,80)+".pdf");
 }
+function onePDF(rid,id){ mkPDF([id],getR(rid),agentById(id).nm); }
+function allPDF(rid){ var r=getR(rid),ids=tabOrder(r).filter(function(id){return r.res[id]&&r.res[id].s==="done";}); if(!ids.length){ toast("Nog niets klaar om te exporteren"); return; } mkPDF(ids,r,"Totaalrapport"); }
 
-function goSyn() {
-  if (!gK()) { show("S"); return; }
-  var done = AG.filter(function(a) { return RES[a.id] && !RES[a.id].startsWith("__E__"); });
-  if (done.length < 2) { alert("Voer eerst een analyse uit."); return; }
-  show("R");
-  document.getElementById("synbox").innerHTML = '<div class="synbox"><h4>Agents samenwerken...</h4><div class="synsub">Analyses worden samengevoegd tot actieplan.</div><div class="lst"><div class="sp spg"></div><div class="lt">Even geduld...</div></div></div>';
-  var sam = "";
-  done.forEach(function(a) { sam += "=== " + a.nm.toUpperCase() + " ===\n" + RES[a.id] + "\n\n"; });
-  var synA = {id: "syn", sy: "Je bent een senior projectadviseur. " + PC + " Maak een CONCREET ACTIEPLAN met: 1) De 5 meest urgente acties die Chiel NU moet nemen, 2) Realistisch tijdpad voor de komende 12 maanden, 3) De 3 grootste kansen en risicos, 4) Eerste stap voor morgen."};
-  callA(synA, "Analyses van alle agents:\n\n" + sam + "\nMaak een concreet gezamenlijk actieplan.").then(function(txt) {
-    SYNRES = txt;
-    document.getElementById("synbox").innerHTML = '<div class="synbox"><h4>Gezamenlijk Actieplan</h4><div class="synsub">Samengesteld op basis van alle analyses.</div><div class="synres">' + SYNRES + '</div><button class="pb" style="margin-top:12px" onclick="synPDF()">Download Actieplan PDF</button></div>';
-  }).catch(function(e) {
-    document.getElementById("synbox").innerHTML = '<div class="synbox"><div class="es">Fout: ' + e.message + '</div></div>';
-  });
+/* ================= INIT ================= */
+function markInterrupted(){
+  var ch=false;
+  DB.runs.forEach(function(r){ Object.keys(r.res).forEach(function(k){ var x=r.res[k]; if(x.s==="run"){ r.res[k]={s:"wait"}; ch=true; } if(x.rep&&x.rep.s==="run"){ delete x.rep; ch=true; } }); });
+  DB.ideas.forEach(function(i){ ["ex","an"].forEach(function(k){ if(i[k]&&i[k].s==="run"){ i[k]={s:"err",e:"Onderbroken (app gesloten). Probeer opnieuw."}; ch=true; } }); });
+  if(ch) save();
 }
-
-function synPDF() {
-  if (!SYNRES) return;
-  mkPDF([{id:"syn",nm:"Gezamenlijk Actieplan",ltr:"A",cl:"#2D6A4F",bg:"rgba(45,106,79,.15)",rl:"Samengesteld door alle 8 agents"}], IDEA, "Actieplan - Charlys Agents", SYNRES);
-}
-
-function upP() {
-  var d = Object.keys(RES).length;
-  document.getElementById("pf").style.width = (d / AG.length * 100) + "%";
-  document.getElementById("pc").textContent = d + " / " + AG.length;
-  document.getElementById("hbadge").textContent = d === AG.length ? "Klaar" : d + " / " + AG.length + " klaar";
-}
-
-function rTabs() {
-  var c = document.getElementById("tabs"); c.innerHTML = "";
-  AG.forEach(function(a) {
-    var isA = a.id === AID, isD = !!RES[a.id], isL = LS.has(a.id), isE = isD && RES[a.id].startsWith("__E__");
-    var t = document.createElement("button");
-    t.className = "tab" + (isA ? " on" : "") + (isD && !isE ? " dn" : "") + (isL ? " ld" : "");
-    if (isA) t.style.setProperty("--tc", a.cl);
-    t.innerHTML = '<span class="sd"></span>' + a.nm;
-    t.onclick = (function(id) { return function() { AID = id; rTabs(); rRes(); }; })(a.id);
-    c.appendChild(t);
-  });
-}
-
-function rRes() {
-  var a = AG.filter(function(x) { return x.id === AID; })[0];
-  var c = document.getElementById("res");
-  if (!a) return;
-  if (LS.has(a.id)) {
-    c.innerHTML = '<div class="rc"><div class="lst"><div class="sp" style="border-top-color:' + a.cl + '"></div><div class="lt">' + a.nm + ' is aan het werk...</div></div></div>';
-    return;
-  }
-  if (!RES[a.id]) {
-    c.innerHTML = '<div class="rc"><div class="ws">Klik op een agent hierboven om de analyse te bekijken.</div></div>';
-    return;
-  }
-  if (RES[a.id].startsWith("__E__")) {
-    c.innerHTML = '<div class="rc"><div class="es"><strong>Fout bij ' + a.nm + ':</strong><br>' + RES[a.id].replace("__E__", "") + '</div></div>';
-    return;
-  }
-  c.innerHTML = '<div class="rc"><div class="rch"><div class="rci" style="background:' + a.bg + ';color:' + a.cl + '">' + a.ltr + '</div><div><div class="rcn" style="color:' + a.cl + '">' + a.nm + '</div><div class="rcr">' + a.rl + '</div></div></div><div class="rcb">' + RES[a.id] + '</div><button class="pb" onclick="aPDF(\'' + a.id + '\')">Download PDF - ' + a.nm + '</button></div>';
-}
-
-function aPDF(id) {
-  var a = AG.filter(function(x) { return x.id === id; })[0];
-  if (!a || !RES[a.id] || RES[a.id].startsWith("__E__")) return;
-  mkPDF([a], IDEA, a.nm + " - Charlys Agents", null);
-}
-
-function allPDF() {
-  var done = AG.filter(function(a) { return RES[a.id] && !RES[a.id].startsWith("__E__"); });
-  if (!done.length) { alert("Wacht tot de agents klaar zijn."); return; }
-  mkPDF(done, IDEA, "Charlys Agents - Totaalrapport", null);
-}
-
-function hxRgb(h) { return {r: parseInt(h.slice(1,3),16), g: parseInt(h.slice(3,5),16), b: parseInt(h.slice(5,7),16)}; }
-
-function mkPDF(list, idea, title, overrideText) {
-  if (!window.jspdf) { alert("PDF library laadt nog."); return; }
-  var doc = new window.jspdf.jsPDF({unit: "mm", format: "a4"});
-  var W = 210, m = 18, lw = W - m * 2, y = 0;
-  function ap() { doc.addPage(); y = m; }
-  function cy(n) { if (y + n > 280) ap(); }
-  doc.setFillColor(13,13,13); doc.rect(0,0,W,297,"F");
-  doc.setTextColor(201,169,110); doc.setFontSize(26); doc.setFont("helvetica","bold"); doc.text("Charly's Agents", m, 55);
-  doc.setFontSize(13); doc.setFont("helvetica","normal"); doc.setTextColor(240,235,224); doc.text(title, m, 68);
-  if (idea) { doc.setFontSize(10); doc.setTextColor(180,170,150); doc.text(doc.splitTextToSize(idea, lw), m, 80); }
-  doc.setFontSize(9); doc.setTextColor(120,110,90); doc.text(new Date().toLocaleDateString("nl-NL", {day:"numeric",month:"long",year:"numeric"}), m, 280);
-  doc.addPage();
-  list.forEach(function(a, idx) {
-    y = m; var rgb = hxRgb(a.cl);
-    doc.setFillColor(rgb.r,rgb.g,rgb.b,20); doc.rect(0,0,W,30,"F");
-    doc.setFillColor(rgb.r,rgb.g,rgb.b); doc.rect(0,0,4,30,"F");
-    doc.setTextColor(rgb.r,rgb.g,rgb.b); doc.setFontSize(15); doc.setFont("helvetica","bold"); doc.text(a.nm, m, 13);
-    doc.setFontSize(8); doc.setFont("helvetica","normal"); doc.setTextColor(150,140,120); doc.text(a.rl.toUpperCase(), m, 22);
-    y = 38;
-    doc.setTextColor(40,36,28); doc.setFontSize(10); doc.setFont("helvetica","normal");
-    var txt = overrideText || (RES[a.id] || "");
-    doc.splitTextToSize(txt, lw).forEach(function(ln) {
-      cy(6);
-      if (ln.trim().slice(-1) === ":" && ln.trim().length < 60) { doc.setFont("helvetica","bold"); doc.setTextColor(rgb.r,rgb.g,rgb.b); }
-      else { doc.setFont("helvetica","normal"); doc.setTextColor(40,36,28); }
-      doc.text(ln, m, y); y += 5.5;
-    });
-    doc.setFontSize(8); doc.setTextColor(180,170,150); doc.text((idx+1) + " / " + list.length + " - Charly's Agents", m, 290);
-    if (idx < list.length - 1) doc.addPage();
-  });
-  doc.save(title.replace(/[^a-z0-9]/gi,"_").toLowerCase() + ".pdf");
-}
-
-function rst() {
-  RES = {}; LS = new Set(); IDEA = ""; SYNRES = "";
-  document.getElementById("ii").value = "";
-  document.getElementById("synbox").innerHTML = "";
-  show("I"); checkSaved();
-  document.getElementById("hbadge").textContent = "8 Specialisten";
-}
-
-var dp = null;
-window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); dp = e; setTimeout(function() { document.getElementById("ib").style.display = "flex"; }, 3000); });
-document.getElementById("ibt").addEventListener("click", function() { if (!dp) return; dp.prompt(); dp.userChoice.then(function() { dp = null; document.getElementById("ib").style.display = "none"; }); });
-
-show(gK() ? "I" : "S");
-updK();
-checkSaved();
+document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeSheet(); });
+loadDB(); markInterrupted();
+if(!gKey() && (!location.hash||location.hash==="#/"||location.hash==="#")) location.hash="#/instellingen"; else route();
 </script>
 </body>
 </html>
